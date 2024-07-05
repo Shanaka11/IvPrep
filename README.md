@@ -6,8 +6,13 @@
 [x] setup unit tests, vitest
 [x] setup prettier
 [x] Setup github actions to check types and run tests
-[ ] Create tickets in jira
+[x] Create tickets in jira
 [ ] Setup Drizzle
 [ ] Setup Supabase
+[ ] Create and deploy Question model
+[ ] Create Question services
+[ ] Create and deploy Topic model
+[ ] Create topic services
+[ ] Create get random questions services
 [ ] Setup Shadcn with theming support
 [ ] Setup release please / Setup this when the app is ready for a staging or production deployment. (This is the CD pipeline for dev / prod in the future)
