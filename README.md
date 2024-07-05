@@ -7,9 +7,10 @@
 [x] setup prettier
 [x] Setup github actions to check types and run tests
 [x] Create tickets in jira
-[ ] Setup Drizzle
-[ ] Setup Supabase
-[ ] Create and deploy Question model
+[x] Setup Drizzle
+[x] Setup Supabase
+[ ] Setup Supabase polcies
+[x] Create and deploy Question model
 [ ] Create Question services
 [ ] Create and deploy Topic model
 [ ] Create topic services
