@@ -1,26 +1,13 @@
-import { db } from "@/db/drizzle";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-
+import { CreateQuestionDto, ReadQuestionDto } from "../models/question";
 import {
-  CreateQuestionDto,
-  QuestionTable,
-  ReadQuestionDto,
-} from "../models/question";
+  IQuestionRepository,
+  //   questionRepository,
+} from "../repositories/questionRepository";
 
-// Consider using a wrapper here so we can inject the db instance
-// create Question
+// By default it will use the repository defined, we can inject a different repository for testing
 export const createQuestionService = async (
   data: CreateQuestionDto[],
+  repository: IQuestionRepository,
 ): Promise<ReadQuestionDto[]> => {
-  //   const question = await db.insert(que);
-  //   return question;
-  return createQuestionService_(db, data);
-};
-
-const createQuestionService_ = async (
-  db: PostgresJsDatabase<Record<string, never>>,
-  data: CreateQuestionDto[],
-): Promise<ReadQuestionDto[]> => {
-  const question = await db.insert(QuestionTable).values(data).returning();
-  return question;
+  return await repository.createQuestionRepository(data);
 };
