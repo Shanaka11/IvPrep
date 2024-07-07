@@ -16,20 +16,20 @@ export const TopicTable = pgTable("topic", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-const readTopicSchema = createSelectSchema(TopicTable);
-export const createTopicSchema = createSelectSchema(TopicTable).omit({
+const ReadTopicSchema = createSelectSchema(TopicTable);
+export const CreateTopicSchema = createSelectSchema(TopicTable).omit({
   id: true,
   active: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const updateTopicSchema = createSelectSchema(TopicTable)
+export const UpdateTopicSchema = createSelectSchema(TopicTable)
   .omit({
     createdAt: true,
   })
   .required({ id: true, updatedAt: true, active: true });
 
-export type CreateTopicDto = z.infer<typeof createTopicSchema>;
-export type UpdateTopicDto = z.infer<typeof updateTopicSchema>;
-export type ReadTopicDto = z.infer<typeof readTopicSchema>;
+export type CreateTopicDto = z.infer<typeof CreateTopicSchema>;
+export type UpdateTopicDto = z.infer<typeof UpdateTopicSchema>;
+export type ReadTopicDto = z.infer<typeof ReadTopicSchema>;
