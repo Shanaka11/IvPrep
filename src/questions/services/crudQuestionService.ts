@@ -20,11 +20,12 @@ export const createQuestionService = async (
       const clearedDataItem = CreateQuestionSchema.parse(dataItem);
       return {
         ...clearedDataItem,
+        active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
     });
-    return await repository.createQuestionRepository(clearedData);
+    return await repository.createQuestion(clearedData);
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       throw parseZodErrors(error);
@@ -55,7 +56,7 @@ export const updateQuestionService = async (
             throw new Error("The question has been updated by someone else");
           // If it is the same, update the question // update the updatedAt field
           clearedData.updatedAt = new Date();
-          return await repository.updateQuestionRepository(clearedData);
+          return await repository.updateQuestion(clearedData);
         }),
       )
     ).flat();

@@ -5,20 +5,22 @@ import {
   ReadQuestionDto,
   UpdateQuestionDto,
 } from "../models/question";
+import { IQuestionRepository } from "../repositories/questionRepository";
 import { createQuestionService } from "../services/crudQuestionService";
 
 // mock database // Move this to a top level file if needed
 const questions: ReadQuestionDto[] = [];
 
 // mock respositroy
-const mockRepository = {
-  createQuestionRepository: async (
+const mockRepository: IQuestionRepository = {
+  createQuestion: async (
     data: CreateQuestionDto[],
   ): Promise<ReadQuestionDto[]> => {
     const createdData = data.map((item, index) => {
       return {
         ...item,
         id: index + 1,
+        active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -26,7 +28,7 @@ const mockRepository = {
     //questions.push(...createdData);
     return createdData;
   },
-  updateQuestionRepository: async (
+  updateQuestion: async (
     data: UpdateQuestionDto,
   ): Promise<ReadQuestionDto[]> => {
     return [
@@ -36,6 +38,16 @@ const mockRepository = {
         updatedAt: new Date(),
       },
     ];
+  },
+  readQuestion: async (id: number): Promise<ReadQuestionDto[]> => {
+    //return questions.filter((question) => question.id === id);
+    return [];
+  },
+  deleteQuestion: async (
+    ids: UpdateQuestionDto["id"][],
+  ): Promise<ReadQuestionDto[]> => {
+    //return questions.filter((question) => ids.includes(question.id));
+    return [];
   },
 };
 
