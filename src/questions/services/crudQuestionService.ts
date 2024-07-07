@@ -16,9 +16,14 @@ export const createQuestionService = async (
 ): Promise<ReadQuestionDto[]> => {
   try {
     // Validate data
-    const clearedData = data.map((dataItem) =>
-      CreateQuestionSchema.parse(dataItem),
-    );
+    const clearedData = data.map((dataItem) => {
+      const clearedDataItem = CreateQuestionSchema.parse(dataItem);
+      return {
+        ...clearedDataItem,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    });
     return await repository.createQuestionRepository(clearedData);
   } catch (error: unknown) {
     if (error instanceof ZodError) {
@@ -40,9 +45,16 @@ export const updateQuestionService = async (
           const clearedData = UpdateQuestionScehma.parse(dataItem);
 
           // Get the existing question
+          const existingQuestion = await getQuestionService(
+            clearedData.id,
+            repository,
+          );
           // Check if the updatedAt is the same as the one in the database
           // If it is not the same, throw an error
-          // If it is the same, update the question
+          if (existingQuestion.updatedAt !== clearedData.updatedAt)
+            throw new Error("The question has been updated by someone else");
+          // If it is the same, update the question // update the updatedAt field
+          clearedData.updatedAt = new Date();
           return await repository.updateQuestionRepository(clearedData);
         }),
       )
@@ -60,4 +72,15 @@ export const deleteQuestionService = async (
   respository: IQuestionRepository,
 ) => {
   // Implement delete question service
+};
+
+export const getQuestionService = async (
+  filter: UpdateQuestionDto["id"], // For now this will just be a single id
+  respository: IQuestionRepository,
+) => {
+  // Implement get question service
+  return {
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 };
