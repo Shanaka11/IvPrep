@@ -1,14 +1,23 @@
 import { expect, test } from "vitest";
 
-import { CreateQuestionDto, ReadQuestionDto } from "../models/question";
-import { createQuestionService } from "../services/crudQuestionService";
+import {
+  CreateQuestionDto,
+  ReadQuestionDto,
+  UpdateQuestionDto,
+} from "../models/question";
+import {
+  createQuestionService,
+  updateQuestionService,
+} from "../services/crudQuestionService";
 
 // mock database // Move this to a top level file if needed
 const questions: ReadQuestionDto[] = [];
 
 // mock respositroy
 const mockRepository = {
-  createQuestionRepository: async (data: CreateQuestionDto[]) => {
+  createQuestionRepository: async (
+    data: CreateQuestionDto[],
+  ): Promise<ReadQuestionDto[]> => {
     const createdData = data.map((item, index) => {
       return {
         ...item,
@@ -19,6 +28,18 @@ const mockRepository = {
     });
     //questions.push(...createdData);
     return createdData;
+  },
+  updateQuestionRepository: async (
+    data: UpdateQuestionDto[],
+  ): Promise<ReadQuestionDto[]> => {
+    const updatedData = data.map((item) => {
+      return {
+        ...item,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    });
+    return updatedData;
   },
 };
 

@@ -1,9 +1,11 @@
 import { db } from "@/db/drizzle";
+import { eq } from "drizzle-orm";
 
 import {
   CreateQuestionDto,
   QuestionTable,
   ReadQuestionDto,
+  UpdateQuestionDto,
 } from "../models/question";
 
 const createQuestionRepository = async (
@@ -13,8 +15,24 @@ const createQuestionRepository = async (
   return question;
 };
 
+const updateQuestionRepository = async (
+  data: UpdateQuestionDto[],
+): Promise<ReadQuestionDto[]> => {
+  const question = await Promise.all(
+    data.map(async (dataItem) => {
+      const updatedQuestion = await db
+        .update(QuestionTable)
+        .set(dataItem)
+        .where(eq(QuestionTable.id, dataItem.id));
+      return updatedQuestion;
+    }),
+  );
+  return question.flat();
+};
+
 export const questionRepository = {
   createQuestionRepository,
+  updateQuestionRepository,
 };
 
 export type IQuestionRepository = typeof questionRepository;

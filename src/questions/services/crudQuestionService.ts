@@ -5,6 +5,7 @@ import {
   CreateQuestionDto,
   CreateQuestionSchema,
   ReadQuestionDto,
+  UpdateQuestionDto,
 } from "../models/question";
 import { IQuestionRepository } from "../repositories/questionRepository";
 
@@ -27,9 +28,19 @@ export const createQuestionService = async (
 };
 
 export const updateQuestionService = async (
-  id: number,
-  data: CreateQuestionDto[],
+  data: UpdateQuestionDto[],
   repository: IQuestionRepository,
 ) => {
-  return;
+  try {
+    // Validate data
+    const clearedData = data.map((dataItem) =>
+      CreateQuestionSchema.parse(dataItem),
+    );
+    return await repository.createQuestionRepository(clearedData);
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw parseZodErrors(error);
+    }
+    throw error;
+  }
 };

@@ -18,9 +18,11 @@ export const CreateQuestionSchema = createInsertSchema(QuestionTable).omit({
   updatedAt: true,
 });
 
-export const UpdateQuestionScehma = createInsertSchema(QuestionTable).omit({
-  createdAt: true,
-});
+export const UpdateQuestionScehma = createInsertSchema(QuestionTable)
+  .omit({
+    createdAt: true,
+  })
+  .required({ id: true, updatedAt: true });
 
 export type CreateQuestionDto = z.infer<typeof CreateQuestionSchema>;
 export type UpdateQuestionDto = z.infer<typeof UpdateQuestionScehma>;
