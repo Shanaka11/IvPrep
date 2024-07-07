@@ -11,11 +11,17 @@ export const QuestionTable = pgTable("question", {
 });
 
 const ReadQuestionSchema = createSelectSchema(QuestionTable);
-const CreateQuestionSchema = createInsertSchema(QuestionTable).omit({
+
+export const CreateQuestionSchema = createInsertSchema(QuestionTable).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 });
 
+export const UpdateQuestionScehma = createInsertSchema(QuestionTable).omit({
+  createdAt: true,
+});
+
 export type CreateQuestionDto = z.infer<typeof CreateQuestionSchema>;
+export type UpdateQuestionDto = z.infer<typeof UpdateQuestionScehma>;
 export type ReadQuestionDto = z.infer<typeof ReadQuestionSchema>;
