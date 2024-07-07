@@ -11,8 +11,8 @@
 [x] Setup Supabase
 [ ] Setup Supabase polcies
 [x] Create and deploy Question model
-[ ] Create Question services
-[ ] Create and deploy Topic model
+[x] Create Question services
+[x] Create and deploy Topic model
 [ ] Create topic services
 [ ] Create get random questions services
 [ ] Setup Shadcn with theming support
