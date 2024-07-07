@@ -16,18 +16,14 @@ const createQuestionRepository = async (
 };
 
 const updateQuestionRepository = async (
-  data: UpdateQuestionDto[],
+  data: UpdateQuestionDto,
 ): Promise<ReadQuestionDto[]> => {
-  const question = await Promise.all(
-    data.map(async (dataItem) => {
-      const updatedQuestion = await db
-        .update(QuestionTable)
-        .set(dataItem)
-        .where(eq(QuestionTable.id, dataItem.id));
-      return updatedQuestion;
-    }),
-  );
-  return question.flat();
+  const question = await db
+    .update(QuestionTable)
+    .set(data)
+    .where(eq(QuestionTable.id, data.id));
+
+  return question;
 };
 
 export const questionRepository = {

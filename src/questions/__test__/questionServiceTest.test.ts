@@ -5,10 +5,7 @@ import {
   ReadQuestionDto,
   UpdateQuestionDto,
 } from "../models/question";
-import {
-  createQuestionService,
-  updateQuestionService,
-} from "../services/crudQuestionService";
+import { createQuestionService } from "../services/crudQuestionService";
 
 // mock database // Move this to a top level file if needed
 const questions: ReadQuestionDto[] = [];
@@ -30,16 +27,15 @@ const mockRepository = {
     return createdData;
   },
   updateQuestionRepository: async (
-    data: UpdateQuestionDto[],
+    data: UpdateQuestionDto,
   ): Promise<ReadQuestionDto[]> => {
-    const updatedData = data.map((item) => {
-      return {
-        ...item,
+    return [
+      {
+        ...data,
         createdAt: new Date(),
         updatedAt: new Date(),
-      };
-    });
-    return updatedData;
+      },
+    ];
   },
 };
 
