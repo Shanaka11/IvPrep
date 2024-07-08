@@ -20,12 +20,19 @@ export const QuestionTable = pgTable("question", {
 
 const ReadQuestionSchema = createSelectSchema(QuestionTable);
 
-export const CreateQuestionSchema = createInsertSchema(QuestionTable).omit({
+const BaseCreateQuestionSchema = createInsertSchema(QuestionTable).omit({
   id: true,
   active: true,
   createdAt: true,
   updatedAt: true,
 });
+
+export const CreateQuestionSchema = z.intersection(
+  BaseCreateQuestionSchema,
+  z.object({
+    topics: z.array(z.number()).min(1),
+  }),
+);
 
 export const UpdateQuestionScehma = createInsertSchema(QuestionTable)
   .omit({

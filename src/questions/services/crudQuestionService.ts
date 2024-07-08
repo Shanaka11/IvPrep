@@ -25,7 +25,13 @@ export const createQuestionService = async (
         updatedAt: new Date(),
       };
     });
-    return await repository.createQuestion(clearedData);
+    // Questions should always have atleast one topic attached to it
+    // After creating the question, attach it to the topic
+    const createdQuestions = await repository.createQuestion(clearedData);
+
+    // Loop through the create question and attach it to the topic
+    createdQuestions.forEach((question) => {});
+    return createdQuestions;
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       throw parseZodErrors(error);

@@ -56,6 +56,7 @@ test("Create Question Service Correct Input", async () => {
   const question: CreateQuestionDto = {
     question: "What is the capital of Nigeria?",
     authorId: "e0beaed0-9a3d-4dc1-9c44-9bb0d116c584",
+    topics: [1, 2],
   };
   const retData = await createQuestionService([question], mockRepository);
 
@@ -74,6 +75,7 @@ test("Create Question Service Correct Input", async () => {
     question:
       "4kHdCKOIiNYdlKQE9DU4AMjexB0Mx5gn0NRwmnn6SmPavtCB3OfqtNVLZkVcPYpR6OsSMqZ11AmNguq2sjUU3V9BjHdWj71hPOag0CG1Q0YT6L3YqLXZNi2fdRysMdG3nBbENLoSw2SoyMl09sukx8noNTywbuMGFNLP5c7Qp7WUNPCMirR5yqngPCTRVwDIQccIv9gVfadOPrmpiuXU8xs8jencC6gWGAGOOt0oEhzptBAtx7H9OGHUPzR766j2r6Vv",
     authorId: "1234",
+    topics: [1, 2],
   };
   expect(
     async () => await createQuestionService([question], mockRepository),
