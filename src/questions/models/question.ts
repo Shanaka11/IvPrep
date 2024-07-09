@@ -12,7 +12,7 @@ import { z } from "zod";
 export const QuestionTable = pgTable("question", {
   id: serial("id").primaryKey(),
   question: varchar("question", { length: 256 }).notNull(),
-  authorId: uuid("author_id").notNull(),
+  authorId: varchar("author_id", { length: 40 }).notNull(),
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
