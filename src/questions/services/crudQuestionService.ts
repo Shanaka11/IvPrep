@@ -1,5 +1,6 @@
 import { db } from "@/db/drizzle";
 import { and, eq } from "drizzle-orm";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import {
   CreateQuestionDto,
@@ -10,7 +11,7 @@ import {
 // Create
 export const createQuestionService = async (
   question: CreateQuestionDto,
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ): Promise<ReadQuestionDto[]> => {
   const createdQuestion = await connection
     .insert(QuestionTable)
@@ -22,7 +23,7 @@ export const createQuestionService = async (
 // Get by id
 export const getQuestionByIdService = async (
   id: ReadQuestionDto["id"],
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ) => {
   const question = await connection
     .select()
@@ -35,7 +36,7 @@ export const getQuestionByIdService = async (
 // Update
 export const updateQuestionService = async (
   question: ReadQuestionDto,
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ): Promise<ReadQuestionDto[]> => {
   const updatedQuestion = await connection
     .update(QuestionTable)

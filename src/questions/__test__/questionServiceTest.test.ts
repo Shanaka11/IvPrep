@@ -1,10 +1,6 @@
 import { expect, test } from "vitest";
 
-import {
-  CreateQuestionDto,
-  ReadQuestionDto,
-  ReadQuestionSchema,
-} from "../models/question";
+import { CreateQuestionDto, ReadQuestionSchema } from "../models/question";
 import { createQuestionUseCase } from "../useCases/crudQuestionUseCases";
 
 // Mock createQuestionService
@@ -22,6 +18,7 @@ test("Create Question Service Correct Input", async () => {
   };
   const retData = await createQuestionUseCase(
     question,
+    undefined,
     createQuestionMockService,
   );
 
@@ -42,7 +39,11 @@ test("Create Question Service InCorrect Input", async () => {
   };
   expect(
     async () =>
-      await createQuestionUseCase(question, createQuestionMockService),
+      await createQuestionUseCase(
+        question,
+        undefined,
+        createQuestionMockService,
+      ),
   ).rejects.toThrow(
     expect.arrayContaining([
       {

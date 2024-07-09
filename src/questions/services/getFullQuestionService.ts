@@ -1,5 +1,6 @@
 import { db } from "@/db/drizzle";
 import { and, eq } from "drizzle-orm";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import { QuestionTable, ReadQuestionDto } from "../models/question";
 import { QuestionTopicTable } from "../models/questionTopic";
@@ -7,7 +8,7 @@ import { TopicTable } from "../models/topic";
 
 export const getFullQuestionService = async (
   id: ReadQuestionDto["id"],
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ) => {
   const fullQuestion = await connection
     .select()

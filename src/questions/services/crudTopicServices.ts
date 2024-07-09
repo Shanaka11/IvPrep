@@ -1,12 +1,13 @@
 import { db } from "@/db/drizzle";
 import { and, eq } from "drizzle-orm";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import { CreateTopicDto, ReadTopicDto, TopicTable } from "../models/topic";
 
 //create
 export const createTopicService = async (
   topic: CreateTopicDto,
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ): Promise<ReadTopicDto[]> => {
   const createdTopic = await connection
     .insert(TopicTable)
@@ -19,7 +20,7 @@ export const createTopicService = async (
 //get by id
 export const getTopicByIdService = async (
   id: ReadTopicDto["id"],
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ): Promise<ReadTopicDto[]> => {
   const topic = await connection
     .select()
@@ -32,7 +33,7 @@ export const getTopicByIdService = async (
 //update
 export const updateTopicService = async (
   topic: ReadTopicDto,
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ): Promise<ReadTopicDto[]> => {
   const updatedTopic = await connection
     .update(TopicTable)
@@ -48,7 +49,7 @@ export const updateTopicService = async (
 //get (Define getTopicServices sepcific to each use case i.e there will be no common get method)
 export const getTopicByNameService = async (
   name: ReadTopicDto["name"],
-  connection = db,
+  connection: PostgresJsDatabase<Record<string, never>>,
 ): Promise<ReadTopicDto[]> => {
   const topic = await connection
     .select()

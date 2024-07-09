@@ -1,3 +1,4 @@
+import { db } from "@/db/drizzle";
 import { parseZodErrors } from "@/util/zodErrorHandler";
 import { ZodError } from "zod";
 
@@ -16,6 +17,7 @@ import {
 // Create Question
 export const createQuestionUseCase = async (
   question: CreateQuestionDto,
+  connection = db,
   createQuestion = createQuestionService,
 ) => {
   try {
@@ -31,7 +33,7 @@ export const createQuestionUseCase = async (
     validatedQuestion.active = true;
     // Insert question into database
 
-    const createdQuestion = await createQuestion(validatedQuestion);
+    const createdQuestion = await createQuestion(validatedQuestion, connection);
     if (createdQuestion.length === 0)
       throw new Error("Failed to create question");
     return createdQuestion[0];
@@ -46,9 +48,10 @@ export const createQuestionUseCase = async (
 // Get Question By Id
 export const getQuestionByIdUseCase = async (
   id: ReadQuestionDto["id"],
+  connection = db,
   getQuestionById = getQuestionByIdService,
 ) => {
-  const question = await getQuestionById(id);
+  const question = await getQuestionById(id, connection);
   if (question.length === 0) throw new Error("Question not found");
   return question[0];
 };
@@ -56,6 +59,7 @@ export const getQuestionByIdUseCase = async (
 // Update
 export const updateQuestionUseCase = async (
   question: ReadQuestionDto,
+  connection = db,
   updateQuestion = updateQuestionService,
 ) => {
   try {
@@ -71,7 +75,7 @@ export const updateQuestionUseCase = async (
     // Add UpdatedAt field
     validatedQuestion.updatedAt = new Date();
     // Update question in database
-    const updatedQuestion = await updateQuestion(validatedQuestion);
+    const updatedQuestion = await updateQuestion(validatedQuestion, connection);
     if (updatedQuestion.length === 0)
       throw new Error("Failed to update question");
     return updatedQuestion[0];
@@ -84,11 +88,14 @@ export const updateQuestionUseCase = async (
 };
 
 // Delete
-export const deleteQuestionUseCase = async (question: ReadQuestionDto) => {
-  const oldQuestion = await getQuestionByIdUseCase(question.id);
+export const deleteQuestionUseCase = async (
+  question: ReadQuestionDto,
+  connection = db,
+) => {
+  const oldQuestion = await getQuestionByIdUseCase(question.id, connection);
   // check updatedAt
   if (oldQuestion.updatedAt !== question.updatedAt)
     throw new Error("Question has been updated by someone else");
   oldQuestion.active = false;
-  return await updateQuestionUseCase(oldQuestion);
+  return await updateQuestionUseCase(oldQuestion, connection);
 };

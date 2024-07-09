@@ -1,3 +1,5 @@
+import { db } from "@/db/drizzle";
+
 import {
   CreateTopicDto,
   CreateTopicSchema,
@@ -14,6 +16,7 @@ import {
 //Create
 export const createTopicUseCase = async (
   topic: CreateTopicDto,
+  connection = db,
   createTopic = createTopicService,
 ) => {
   // Validate topic with zod
@@ -33,7 +36,7 @@ export const createTopicUseCase = async (
   // New records are always active
   validatedTopic.active = true;
   // Insert topic into database
-  const createdTopic = await createTopic(validatedTopic);
+  const createdTopic = await createTopic(validatedTopic, connection);
   if (createdTopic.length === 0) throw new Error("Failed to create topic");
   return createdTopic[0];
 };
@@ -41,9 +44,10 @@ export const createTopicUseCase = async (
 //Get By Id
 export const getTopicByIdUseCase = async (
   id: ReadTopicDto["id"],
+  connection = db,
   getTopicById = getTopicByIdService,
 ) => {
-  const topic = await getTopicById(id);
+  const topic = await getTopicById(id, connection);
   if (topic.length === 0) throw new Error("Topic not found");
   return topic[0];
 };
@@ -51,6 +55,7 @@ export const getTopicByIdUseCase = async (
 //Update
 export const updateTopicUseCase = async (
   topic: ReadTopicDto,
+  connection = db,
   updateTopic = updateTopicService,
 ) => {
   // Validate topic with zod
@@ -71,30 +76,34 @@ export const updateTopicUseCase = async (
   // Add UpdatedAt fields
   validatedTopic.updatedAt = new Date();
   // Update topic in database
-  const updatedTopic = await updateTopic(validatedTopic);
+  const updatedTopic = await updateTopic(validatedTopic, connection);
   if (updatedTopic.length === 0) throw new Error("Failed to update Topic");
   return updatedTopic[0];
 };
 
 //Delete
-export const deleteTopicUseCase = async (topic: ReadTopicDto) => {
+export const deleteTopicUseCase = async (
+  topic: ReadTopicDto,
+  connection = db,
+) => {
   // Get the topic by id
-  const oldTopic = await getTopicByIdUseCase(topic.id);
+  const oldTopic = await getTopicByIdUseCase(topic.id, connection);
   // Check updated at values
   if (oldTopic.updatedAt !== topic.updatedAt)
     throw new Error("Topic has been updated by another user");
   // Set active flag to false
   oldTopic.active = false;
   // Update topic in database
-  return await updateTopicUseCase(oldTopic);
+  return await updateTopicUseCase(oldTopic, connection);
 };
 
 // Check Topic with the same name exists
 export const checkTopicExistsUseCase = async (
   name: string,
+  connection = db,
   getTopicByName = getTopicByNameService,
 ) => {
-  const topic = await getTopicByName(name);
+  const topic = await getTopicByName(name, connection);
   if (topic.length > 0) return true;
   return false;
 };
