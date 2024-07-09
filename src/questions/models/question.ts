@@ -18,28 +18,8 @@ export const QuestionTable = pgTable("question", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-const ReadQuestionSchema = createSelectSchema(QuestionTable);
-
-const BaseCreateQuestionSchema = createInsertSchema(QuestionTable).omit({
-  id: true,
-  active: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const CreateQuestionSchema = z.intersection(
-  BaseCreateQuestionSchema,
-  z.object({
-    topics: z.array(z.number()).min(1),
-  }),
-);
-
-export const UpdateQuestionScehma = createInsertSchema(QuestionTable)
-  .omit({
-    createdAt: true,
-  })
-  .required({ id: true, updatedAt: true, active: true });
+export const ReadQuestionSchema = createSelectSchema(QuestionTable);
+export const CreateQuestionSchema = createInsertSchema(QuestionTable);
 
 export type CreateQuestionDto = z.infer<typeof CreateQuestionSchema>;
-export type UpdateQuestionDto = z.infer<typeof UpdateQuestionScehma>;
 export type ReadQuestionDto = z.infer<typeof ReadQuestionSchema>;

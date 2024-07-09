@@ -86,8 +86,7 @@ export const deleteTopicUseCase = async (topic: ReadTopicDto) => {
   // Set active flag to false
   oldTopic.active = false;
   // Update topic in database
-  const deletedTopic = await updateTopicUseCase(oldTopic);
-  return deletedTopic;
+  return await updateTopicUseCase(oldTopic);
 };
 
 // Check Topic with the same name exists

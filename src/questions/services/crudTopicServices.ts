@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { CreateTopicDto, ReadTopicDto, TopicTable } from "../models/topic";
 
@@ -24,7 +24,7 @@ export const getTopicByIdService = async (
   const topic = await connection
     .select()
     .from(TopicTable)
-    .where(eq(TopicTable.id, id));
+    .where(and(eq(TopicTable.id, id), eq(TopicTable.active, true)));
 
   return topic;
 };
@@ -37,7 +37,7 @@ export const updateTopicService = async (
   const updatedTopic = await connection
     .update(TopicTable)
     .set(topic)
-    .where(eq(TopicTable.id, topic.id))
+    .where(and(eq(TopicTable.id, topic.id), eq(TopicTable.active, true)))
     .returning();
 
   return updatedTopic;
@@ -53,7 +53,7 @@ export const getTopicByNameService = async (
   const topic = await connection
     .select()
     .from(TopicTable)
-    .where(eq(TopicTable.name, name));
+    .where(and(eq(TopicTable.name, name), eq(TopicTable.active, true)));
 
   return topic;
 };
