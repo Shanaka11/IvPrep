@@ -17,6 +17,7 @@ import {
 // Create Question
 export const createQuestionUseCase = async (
   question: CreateQuestionDto,
+  userId: ReadQuestionDto["authorId"],
   connection = db,
   createQuestion = createQuestionService,
 ) => {
@@ -31,6 +32,8 @@ export const createQuestionUseCase = async (
     validatedQuestion.createdAt = validatedQuestion.updatedAt;
     // New records are always active
     validatedQuestion.active = true;
+    // Set the auther
+    validatedQuestion.authorId = userId;
     // Insert question into database
 
     const createdQuestion = await createQuestion(validatedQuestion, connection);
@@ -59,6 +62,7 @@ export const getQuestionByIdUseCase = async (
 // Update
 export const updateQuestionUseCase = async (
   question: ReadQuestionDto,
+  userId: ReadQuestionDto["authorId"],
   connection = db,
   updateQuestion = updateQuestionService,
 ) => {
@@ -68,6 +72,9 @@ export const updateQuestionUseCase = async (
 
     // Get question by id
     const oldQuestion = await getQuestionByIdUseCase(validatedQuestion.id);
+    // Check auther
+    if (oldQuestion.authorId !== userId)
+      throw new Error("You are not allowed to update this question");
     // check updatedAt
     if (oldQuestion.updatedAt !== validatedQuestion.updatedAt)
       throw new Error("Question has been updated by someone else");
@@ -90,6 +97,7 @@ export const updateQuestionUseCase = async (
 // Delete
 export const deleteQuestionUseCase = async (
   question: ReadQuestionDto,
+  userId: ReadQuestionDto["authorId"],
   connection = db,
 ) => {
   const oldQuestion = await getQuestionByIdUseCase(question.id, connection);
@@ -97,5 +105,5 @@ export const deleteQuestionUseCase = async (
   if (oldQuestion.updatedAt !== question.updatedAt)
     throw new Error("Question has been updated by someone else");
   oldQuestion.active = false;
-  return await updateQuestionUseCase(oldQuestion, connection);
+  return await updateQuestionUseCase(oldQuestion, userId, connection);
 };

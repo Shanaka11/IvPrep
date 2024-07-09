@@ -14,10 +14,11 @@ test("Create Question Service Correct Input", async () => {
   // Create Question
   const question: CreateQuestionDto = {
     question: "What is the capital of Nigeria?",
-    authorId: "e0beaed0-9a3d-4dc1-9c44-9bb0d116c584",
+    authorId: "e0beaed0-9a3d-4dc1-9c44-9bb0d116c581",
   };
   const retData = await createQuestionUseCase(
     question,
+    "e0beaed0-9a3d-4dc1-9c44-9bb0d116c584",
     undefined,
     createQuestionMockService,
   );
@@ -41,6 +42,7 @@ test("Create Question Service InCorrect Input", async () => {
     async () =>
       await createQuestionUseCase(
         question,
+        "e0beaed0-9a3d-4dc1-9c44-9bb0d116c584",
         undefined,
         createQuestionMockService,
       ),
