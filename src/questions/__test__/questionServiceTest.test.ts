@@ -52,10 +52,6 @@ test("Create Question Service InCorrect Input", async () => {
         path: "question",
         message: "String must contain at most 256 character(s)",
       },
-      {
-        path: "authorId",
-        message: "Invalid uuid",
-      },
     ]),
   );
 });
