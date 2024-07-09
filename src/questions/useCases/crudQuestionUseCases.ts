@@ -1,3 +1,6 @@
+import { parseZodErrors } from "@/util/zodErrorHandler";
+import { ZodError } from "zod";
+
 import {
   CreateQuestionDto,
   CreateQuestionSchema,
@@ -15,21 +18,29 @@ export const createQuestionUseCase = async (
   question: CreateQuestionDto,
   createQuestion = createQuestionService,
 ) => {
-  // Validate question with zod
-  const validatedQuestion = CreateQuestionSchema.parse(question);
+  try {
+    // Validate question with zod
+    const validatedQuestion = CreateQuestionSchema.parse(question);
 
-  // Set the id to undefined to let the database generate it
-  validatedQuestion.id = undefined;
-  // Add UpdatedAt and CreatedAt fields
-  validatedQuestion.updatedAt = new Date();
-  validatedQuestion.createdAt = validatedQuestion.updatedAt;
-  // New records are always active
-  validatedQuestion.active = true;
-  // Insert question into database
-  const createdQuestion = await createQuestion(validatedQuestion);
-  if (createdQuestion.length === 0)
-    throw new Error("Failed to create question");
-  return createdQuestion[0];
+    // Set the id to undefined to let the database generate it
+    validatedQuestion.id = undefined;
+    // Add UpdatedAt and CreatedAt fields
+    validatedQuestion.updatedAt = new Date();
+    validatedQuestion.createdAt = validatedQuestion.updatedAt;
+    // New records are always active
+    validatedQuestion.active = true;
+    // Insert question into database
+
+    const createdQuestion = await createQuestion(validatedQuestion);
+    if (createdQuestion.length === 0)
+      throw new Error("Failed to create question");
+    return createdQuestion[0];
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw parseZodErrors(error);
+    }
+    throw error;
+  }
 };
 
 // Get Question By Id
@@ -47,22 +58,29 @@ export const updateQuestionUseCase = async (
   question: ReadQuestionDto,
   updateQuestion = updateQuestionService,
 ) => {
-  // Validate question with zod
-  const validatedQuestion = ReadQuestionSchema.parse(question);
+  try {
+    // Validate question with zod
+    const validatedQuestion = ReadQuestionSchema.parse(question);
 
-  // Get question by id
-  const oldQuestion = await getQuestionByIdUseCase(validatedQuestion.id);
-  // check updatedAt
-  if (oldQuestion.updatedAt !== validatedQuestion.updatedAt)
-    throw new Error("Question has been updated by someone else");
+    // Get question by id
+    const oldQuestion = await getQuestionByIdUseCase(validatedQuestion.id);
+    // check updatedAt
+    if (oldQuestion.updatedAt !== validatedQuestion.updatedAt)
+      throw new Error("Question has been updated by someone else");
 
-  // Add UpdatedAt field
-  validatedQuestion.updatedAt = new Date();
-  // Update question in database
-  const updatedQuestion = await updateQuestion(validatedQuestion);
-  if (updatedQuestion.length === 0)
-    throw new Error("Failed to update question");
-  return updatedQuestion[0];
+    // Add UpdatedAt field
+    validatedQuestion.updatedAt = new Date();
+    // Update question in database
+    const updatedQuestion = await updateQuestion(validatedQuestion);
+    if (updatedQuestion.length === 0)
+      throw new Error("Failed to update question");
+    return updatedQuestion[0];
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw parseZodErrors(error);
+    }
+    throw error;
+  }
 };
 
 // Delete
