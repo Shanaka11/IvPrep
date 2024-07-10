@@ -1,7 +1,10 @@
 import { expect, test } from "vitest";
 
 import { CreateQuestionDto, ReadQuestionSchema } from "../models/question";
+import { ReadTopicDto } from "../models/topic";
 import { createQuestionUseCase } from "../useCases/crudQuestionUseCases";
+import { getRandomQuestionsUseCase } from "../useCases/getRandomQuestionsUseCase";
+import { mockDatabase } from "./mockDatabase";
 
 // Mock createQuestionService
 //createQuestion: (question: CreateQuestionDto, connection?: PostgresJsDatabase<Record<string, never>>) => Promise<ReadQuestionDto[]>
@@ -54,4 +57,45 @@ test("Create Question Service InCorrect Input", async () => {
       },
     ]),
   );
+});
+
+const mockGetQuestionsForTopicsService = async (ids: ReadTopicDto["id"][]) => {
+  //
+  const questions = mockDatabase.question.map((question) => {
+    return {
+      ...question,
+      topics: mockDatabase.topic.filter((topic) => topic.id === ids[0]),
+    };
+  });
+  return questions;
+};
+
+test("Get random questions when given a topic", async () => {
+  const questions1 = await getRandomQuestionsUseCase(
+    [1],
+    undefined,
+    mockGetQuestionsForTopicsService,
+  );
+  // Should have 10 questions
+  expect(questions1.length).toBe(10);
+
+  // Fetch questions a second time,
+  const questions2 = await getRandomQuestionsUseCase(
+    [1],
+    undefined,
+    mockGetQuestionsForTopicsService,
+  );
+  // Should have 10 questions
+  expect(questions2.length).toBe(10);
+
+  var isEqual = true;
+  // questions1 and questions2 should not be the same
+  for (let i = 0; i < 10; i++) {
+    if (questions1[i].id !== questions2[i].id) {
+      isEqual = false;
+      break;
+    }
+  }
+
+  expect(isEqual).toEqual(false);
 });
