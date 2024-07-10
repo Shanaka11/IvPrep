@@ -22,8 +22,5 @@ export const createFullQuestion = async (
     return await getFullQuestionById(createdQuestion.id, trx);
   });
 
-  return {
-    ...createdQuestion.question,
-    topics: createdQuestion.topic,
-  };
+  return createdQuestion;
 };
