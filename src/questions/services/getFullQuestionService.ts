@@ -1,16 +1,16 @@
-import { db } from "@/db/drizzle";
 import { and, eq } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import { QuestionTable, ReadQuestionDto } from "../models/question";
 import { QuestionTopicTable } from "../models/questionTopic";
 import { TopicTable } from "../models/topic";
+import { formatFullQuestionDrizzle } from "./utils/formatFullQuestionDrizzle";
 
 export const getFullQuestionService = async (
   id: ReadQuestionDto["id"],
   connection: PostgresJsDatabase<Record<string, never>>,
 ) => {
-  const fullQuestion = await connection
+  const results = await connection
     .select()
     .from(QuestionTable)
     .innerJoin(
@@ -25,5 +25,6 @@ export const getFullQuestionService = async (
       ),
     )
     .where(and(eq(QuestionTable.id, id), eq(QuestionTable.active, true)));
-  return fullQuestion;
+
+  return formatFullQuestionDrizzle(results);
 };
