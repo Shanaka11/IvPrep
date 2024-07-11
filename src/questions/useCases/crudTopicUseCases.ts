@@ -86,6 +86,7 @@ export const deleteTopicUseCase = async (
   topic: ReadTopicDto,
   connection = db,
 ) => {
+  // Check if any questions are associated with the topic if so not allowed to delete
   // Get the topic by id
   const oldTopic = await getTopicByIdUseCase(topic.id, connection);
   // Check updated at values
