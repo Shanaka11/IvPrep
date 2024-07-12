@@ -5,6 +5,7 @@ import "./globals.css";
 
 import Appbar from "@/components/appbar/Appbar";
 import Providers from "@/components/providers/Providers";
+import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
         <body className={`${roboto.className} grid grid-rows-[50px_1fr]`}>
           <Appbar />
           {children}
+          <Toaster />
         </body>
       </html>
     </Providers>

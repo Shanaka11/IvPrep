@@ -5,9 +5,11 @@ import {
   CreateTopicSchema,
   ReadTopicDto,
   ReadTopicSchema,
+  TopicTable,
 } from "../models/topic";
 import {
   createTopicService,
+  getAllTopicsService,
   getTopicByIdService,
   getTopicByNameService,
   updateTopicService,
@@ -19,7 +21,9 @@ export const createTopicUseCase = async (
   connection = db,
   createTopic = createTopicService,
 ) => {
+  // Later restrict this to only allow admins
   // Validate topic with zod
+
   const validatedTopic = CreateTopicSchema.parse(topic);
 
   // Check if a topic with the same name already exists
@@ -27,7 +31,6 @@ export const createTopicUseCase = async (
     throw new Error(
       `Topic with the name '${validatedTopic.name}' already exists`,
     );
-
   // Set the id to undefined to let the database generate it
   validatedTopic.id = undefined;
   // Add UpdatedAt and CreatedAt fields
@@ -36,6 +39,7 @@ export const createTopicUseCase = async (
   // New records are always active
   validatedTopic.active = true;
   // Insert topic into database
+
   const createdTopic = await createTopic(validatedTopic, connection);
   if (createdTopic.length === 0) throw new Error("Failed to create topic");
   return createdTopic[0];
@@ -110,3 +114,9 @@ export const checkTopicExistsUseCase = async (
 };
 
 //Get Many
+export const getAllTopicsUseCase = async (
+  connection = db,
+  getAllTopics = getAllTopicsService,
+) => {
+  return await getAllTopics(connection);
+};

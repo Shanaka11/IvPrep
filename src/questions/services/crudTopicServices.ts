@@ -58,3 +58,15 @@ export const getTopicByNameService = async (
 
   return topic;
 };
+
+// get all topics
+export const getAllTopicsService = async (
+  connection: PostgresJsDatabase<Record<string, never>>,
+): Promise<ReadTopicDto[]> => {
+  const topics = await connection
+    .select()
+    .from(TopicTable)
+    .where(eq(TopicTable.active, true));
+
+  return topics;
+};
