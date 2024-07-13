@@ -89,9 +89,11 @@ const TopicDrawer = ({
     <Drawer open={open} onOpenChange={handleDrawerOpenChange} direction="right">
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Add New Topic</DrawerTitle>
+          <DrawerTitle>{topic ? "Update Topic" : "Add New Topic"}</DrawerTitle>
           <DrawerDescription>
-            Add a new topic to the list of topics.
+            {topic
+              ? "Update the topic details."
+              : "Add a new topic to the list of topics."}
           </DrawerDescription>
         </DrawerHeader>
 
@@ -123,7 +125,7 @@ const TopicDrawer = ({
             onClick={form.handleSubmit(onSubmit)}
             disabled={form.formState.isSubmitting}
           >
-            Submit
+            {topic ? "Update" : "Add"}
           </Button>
           <Button
             className="w-full"
