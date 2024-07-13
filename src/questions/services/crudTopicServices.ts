@@ -1,5 +1,4 @@
-import { db } from "@/db/drizzle";
-import { and, eq } from "drizzle-orm";
+import { and, eq, ilike } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import { CreateTopicDto, ReadTopicDto, TopicTable } from "../models/topic";
@@ -57,4 +56,36 @@ export const getTopicByNameService = async (
     .where(and(eq(TopicTable.name, name), eq(TopicTable.active, true)));
 
   return topic;
+};
+
+// get all topics
+export const getAllTopicsService = async (
+  connection: PostgresJsDatabase<Record<string, never>>,
+): Promise<ReadTopicDto[]> => {
+  const topics = await connection
+    .select()
+    .from(TopicTable)
+    .where(eq(TopicTable.active, true))
+    .orderBy(TopicTable.id);
+
+  return topics;
+};
+
+// get filtered topics
+export const getFilteredTopicsService = async (
+  searchString: string,
+  connection: PostgresJsDatabase<Record<string, never>>,
+): Promise<ReadTopicDto[]> => {
+  const topics = await connection
+    .select()
+    .from(TopicTable)
+    .where(
+      and(
+        eq(TopicTable.active, true),
+        ilike(TopicTable.name, `%${searchString}%`),
+      ),
+    )
+    .orderBy(TopicTable.id);
+
+  return topics;
 };

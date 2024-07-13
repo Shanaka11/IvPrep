@@ -15,8 +15,12 @@
 [x] Create and deploy Topic model
 [x] Create topic services
 [x] Create question service to connect topic when creating questions
-[ ] Setup auth / Cleark
-[ ] Setup Random Question Selector Service
-[ ] Create get random questions services
-[ ] Setup Shadcn with theming support
+[x] Setup auth / Cleark
+[x] Setup Random Question Selector Service
+[x] Create get random questions services
+[x] Setup Shadcn with theming support
+[x] Create Topic page
+[ ] Create Question page
+[ ] Add loading states to tables
+[ ] Create landing page
 [ ] Setup release please / Setup this when the app is ready for a staging or production deployment. (This is the CD pipeline for dev / prod in the future)

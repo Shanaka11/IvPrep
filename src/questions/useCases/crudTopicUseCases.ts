@@ -5,9 +5,12 @@ import {
   CreateTopicSchema,
   ReadTopicDto,
   ReadTopicSchema,
+  TopicTable,
 } from "../models/topic";
 import {
   createTopicService,
+  getAllTopicsService,
+  getFilteredTopicsService,
   getTopicByIdService,
   getTopicByNameService,
   updateTopicService,
@@ -19,7 +22,9 @@ export const createTopicUseCase = async (
   connection = db,
   createTopic = createTopicService,
 ) => {
+  // Later restrict this to only allow admins
   // Validate topic with zod
+
   const validatedTopic = CreateTopicSchema.parse(topic);
 
   // Check if a topic with the same name already exists
@@ -27,7 +32,6 @@ export const createTopicUseCase = async (
     throw new Error(
       `Topic with the name '${validatedTopic.name}' already exists`,
     );
-
   // Set the id to undefined to let the database generate it
   validatedTopic.id = undefined;
   // Add UpdatedAt and CreatedAt fields
@@ -36,6 +40,7 @@ export const createTopicUseCase = async (
   // New records are always active
   validatedTopic.active = true;
   // Insert topic into database
+
   const createdTopic = await createTopic(validatedTopic, connection);
   if (createdTopic.length === 0) throw new Error("Failed to create topic");
   return createdTopic[0];
@@ -54,23 +59,26 @@ export const getTopicByIdUseCase = async (
 
 //Update
 export const updateTopicUseCase = async (
-  topic: ReadTopicDto,
+  topic: CreateTopicDto,
   connection = db,
   updateTopic = updateTopicService,
 ) => {
   // Validate topic with zod
   const validatedTopic = ReadTopicSchema.parse(topic);
 
-  // Check if a topic with the same name already exists
-  if (await checkTopicExistsUseCase(validatedTopic.name))
-    throw new Error(
-      `Topic with the name '${validatedTopic.name}' already exists`,
-    );
-
   // Get the topic by id
   const oldTopic = await getTopicByIdUseCase(validatedTopic.id);
+
+  // Check if a topic with the same name already exists, If the name is updated only then do this check
+  if (oldTopic.name !== validatedTopic.name) {
+    if (await checkTopicExistsUseCase(validatedTopic.name))
+      throw new Error(
+        `Topic with the name '${validatedTopic.name}' already exists`,
+      );
+  }
+
   // Check updated at values
-  if (oldTopic.updatedAt !== validatedTopic.updatedAt)
+  if (oldTopic.updatedAt.getTime() !== validatedTopic.updatedAt.getTime())
     throw new Error("Topic has been updated by another user");
   // if same update else throw an error
   // Add UpdatedAt fields
@@ -90,12 +98,22 @@ export const deleteTopicUseCase = async (
   // Get the topic by id
   const oldTopic = await getTopicByIdUseCase(topic.id, connection);
   // Check updated at values
-  if (oldTopic.updatedAt !== topic.updatedAt)
+  if (oldTopic.updatedAt.getTime() !== topic.updatedAt.getTime())
     throw new Error("Topic has been updated by another user");
   // Set active flag to false
   oldTopic.active = false;
   // Update topic in database
   return await updateTopicUseCase(oldTopic, connection);
+};
+
+// Bulk Delete
+export const bulkDeleteTopicsUseCase = async (
+  topics: ReadTopicDto[],
+  connection = db,
+) => {
+  for (let i = 0; i < topics.length; i++) {
+    await deleteTopicUseCase(topics[i], connection);
+  }
 };
 
 // Check Topic with the same name exists
@@ -110,3 +128,14 @@ export const checkTopicExistsUseCase = async (
 };
 
 //Get Many
+export const getAllTopicsUseCase = async (
+  searchString?: string,
+  connection = db,
+  getAllTopics = getAllTopicsService,
+  getFilteredTopics = getFilteredTopicsService,
+) => {
+  if (searchString) {
+    return await getFilteredTopics(searchString, connection);
+  }
+  return await getAllTopics(connection);
+};
