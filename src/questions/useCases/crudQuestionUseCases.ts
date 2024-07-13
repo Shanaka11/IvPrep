@@ -76,7 +76,9 @@ export const updateQuestionUseCase = async (
     if (oldQuestion.authorId !== userId)
       throw new Error("You are not allowed to update this question");
     // check updatedAt
-    if (oldQuestion.updatedAt !== validatedQuestion.updatedAt)
+    if (
+      oldQuestion.updatedAt.getTime() !== validatedQuestion.updatedAt.getTime()
+    )
       throw new Error("Question has been updated by someone else");
 
     // Add UpdatedAt field
@@ -102,7 +104,7 @@ export const deleteQuestionUseCase = async (
 ) => {
   const oldQuestion = await getQuestionByIdUseCase(question.id, connection);
   // check updatedAt
-  if (oldQuestion.updatedAt !== question.updatedAt)
+  if (oldQuestion.updatedAt.getTime() !== question.updatedAt.getTime())
     throw new Error("Question has been updated by someone else");
   oldQuestion.active = false;
   return await updateQuestionUseCase(oldQuestion, userId, connection);

@@ -18,32 +18,58 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { createTopicAction } from "@/questions/actions/topic/insertTopicAction";
-import { CreateTopicDto, CreateTopicSchema } from "@/questions/models/topic";
+import { updateTopicAction } from "@/questions/actions/topic/updateTopicAction";
+import {
+  CreateTopicDto,
+  CreateTopicSchema,
+  ReadTopicDto,
+} from "@/questions/models/topic";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 type TopicDrawerProps = {
   open: boolean;
+  topic?: ReadTopicDto;
   handleDrawerOpenChange: (open: boolean) => void;
 };
 
-const TopicDrawer = ({ open, handleDrawerOpenChange }: TopicDrawerProps) => {
+const TopicDrawer = ({
+  open,
+  handleDrawerOpenChange,
+  topic,
+}: TopicDrawerProps) => {
   const form = useForm<CreateTopicDto>({
     resolver: zodResolver(CreateTopicSchema),
     defaultValues: {
-      name: "",
+      name: topic?.name ?? "",
     },
   });
+
+  useEffect(() => {
+    if (open) {
+      form.setValue("name", topic?.name ?? "");
+    }
+  }, [open, form, topic?.name]);
 
   const { toast } = useToast();
 
   const onSubmit = async (data: CreateTopicDto) => {
     try {
-      await createTopicAction(data);
-      toast({
-        variant: "success",
-        title: "Topic added successfully",
-      });
+      if (topic) {
+        // Update topic
+        await updateTopicAction({ ...topic, ...data });
+        toast({
+          variant: "success",
+          title: "Topic updated successfully",
+        });
+      } else {
+        await createTopicAction(data);
+        toast({
+          variant: "success",
+          title: "Topic added successfully",
+        });
+      }
       form.reset();
       handleDrawerOpenChange(false);
     } catch (error: unknown) {
@@ -53,6 +79,7 @@ const TopicDrawer = ({ open, handleDrawerOpenChange }: TopicDrawerProps) => {
           title: "Failed to add topic",
           description: error.message,
         });
+        return;
       }
       throw error;
     }

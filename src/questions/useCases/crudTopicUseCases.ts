@@ -59,7 +59,7 @@ export const getTopicByIdUseCase = async (
 
 //Update
 export const updateTopicUseCase = async (
-  topic: ReadTopicDto,
+  topic: CreateTopicDto,
   connection = db,
   updateTopic = updateTopicService,
 ) => {
@@ -75,7 +75,7 @@ export const updateTopicUseCase = async (
   // Get the topic by id
   const oldTopic = await getTopicByIdUseCase(validatedTopic.id);
   // Check updated at values
-  if (oldTopic.updatedAt !== validatedTopic.updatedAt)
+  if (oldTopic.updatedAt.getTime() !== validatedTopic.updatedAt.getTime())
     throw new Error("Topic has been updated by another user");
   // if same update else throw an error
   // Add UpdatedAt fields
@@ -95,7 +95,7 @@ export const deleteTopicUseCase = async (
   // Get the topic by id
   const oldTopic = await getTopicByIdUseCase(topic.id, connection);
   // Check updated at values
-  if (oldTopic.updatedAt !== topic.updatedAt)
+  if (oldTopic.updatedAt.getTime() !== topic.updatedAt.getTime())
     throw new Error("Topic has been updated by another user");
   // Set active flag to false
   oldTopic.active = false;

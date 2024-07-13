@@ -2,14 +2,14 @@
 
 import { getAuthenticatedUser } from "@/auth/getAuthenticatedUser";
 import { CreateTopicDto } from "@/questions/models/topic";
-import { createTopicUseCase } from "@/questions/useCases/crudTopicUseCases";
+import { updateTopicUseCase } from "@/questions/useCases/crudTopicUseCases";
 import { revalidatePath } from "next/cache";
 
-export const createTopicAction = async (topic: CreateTopicDto) => {
+export const updateTopicAction = async (topic: CreateTopicDto) => {
   getAuthenticatedUser();
-  // Create the topic
-  const response = await createTopicUseCase(topic);
-  // Invalidate cache
+  // Update topic
+  const response = await updateTopicUseCase(topic);
+  // invalidate cache
   revalidatePath("/topics");
 
   return response;

@@ -65,7 +65,8 @@ export const getAllTopicsService = async (
   const topics = await connection
     .select()
     .from(TopicTable)
-    .where(eq(TopicTable.active, true));
+    .where(eq(TopicTable.active, true))
+    .orderBy(TopicTable.id);
 
   return topics;
 };
@@ -83,7 +84,8 @@ export const getFilteredTopicsService = async (
         eq(TopicTable.active, true),
         ilike(TopicTable.name, `%${searchString}%`),
       ),
-    );
+    )
+    .orderBy(TopicTable.id);
 
   return topics;
 };

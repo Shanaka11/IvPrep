@@ -2,9 +2,11 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  RowSelectionState,
+  Updater,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 import {
   Table,
@@ -18,16 +20,25 @@ import {
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  rowSelection: RowSelectionState;
+  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
 };
 
 const DataTable = <TData, TValue>({
   columns,
   data,
+  rowSelection,
+  setRowSelection,
 }: DataTableProps<TData, TValue>) => {
   const table = useReactTable({
     data,
     columns,
+    state: {
+      rowSelection,
+    },
     getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: setRowSelection,
+    enableRowSelection: true,
   });
   return (
     <div className="rounded-md border">
