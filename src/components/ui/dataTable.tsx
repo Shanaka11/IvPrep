@@ -36,6 +36,9 @@ const DataTable = <TData, TValue>({
     state: {
       rowSelection,
     },
+    defaultColumn: {
+      size: -1,
+    },
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: setRowSelection,
     enableRowSelection: true,
@@ -48,7 +51,15 @@ const DataTable = <TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    style={{
+                      width:
+                        header.column.columnDef.size === -1
+                          ? "auto"
+                          : header.column.columnDef.size,
+                    }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
