@@ -66,14 +66,17 @@ export const updateTopicUseCase = async (
   // Validate topic with zod
   const validatedTopic = ReadTopicSchema.parse(topic);
 
-  // Check if a topic with the same name already exists
-  if (await checkTopicExistsUseCase(validatedTopic.name))
-    throw new Error(
-      `Topic with the name '${validatedTopic.name}' already exists`,
-    );
-
   // Get the topic by id
   const oldTopic = await getTopicByIdUseCase(validatedTopic.id);
+
+  // Check if a topic with the same name already exists, If the name is updated only then do this check
+  if (oldTopic.name !== validatedTopic.name) {
+    if (await checkTopicExistsUseCase(validatedTopic.name))
+      throw new Error(
+        `Topic with the name '${validatedTopic.name}' already exists`,
+      );
+  }
+
   // Check updated at values
   if (oldTopic.updatedAt.getTime() !== validatedTopic.updatedAt.getTime())
     throw new Error("Topic has been updated by another user");
@@ -101,6 +104,16 @@ export const deleteTopicUseCase = async (
   oldTopic.active = false;
   // Update topic in database
   return await updateTopicUseCase(oldTopic, connection);
+};
+
+// Bulk Delete
+export const bulkDeleteTopicsUseCase = async (
+  topics: ReadTopicDto[],
+  connection = db,
+) => {
+  for (let i = 0; i < topics.length; i++) {
+    await deleteTopicUseCase(topics[i], connection);
+  }
 };
 
 // Check Topic with the same name exists
