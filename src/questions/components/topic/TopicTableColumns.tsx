@@ -7,6 +7,7 @@ export const topicTableColumns: ColumnDef<ReadTopicDto>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    size: 50,
   },
   {
     accessorKey: "name",

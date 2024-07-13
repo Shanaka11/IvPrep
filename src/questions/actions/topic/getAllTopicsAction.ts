@@ -1,3 +1,5 @@
+"use server";
+
 import { getAuthenticatedUser } from "@/auth/getAuthenticatedUser";
 import { getAllTopicsUseCase } from "@/questions/useCases/crudTopicUseCases";
 

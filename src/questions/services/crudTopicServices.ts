@@ -1,5 +1,4 @@
-import { db } from "@/db/drizzle";
-import { and, eq, like } from "drizzle-orm";
+import { and, eq, ilike } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import { CreateTopicDto, ReadTopicDto, TopicTable } from "../models/topic";
@@ -82,7 +81,7 @@ export const getFilteredTopicsService = async (
     .where(
       and(
         eq(TopicTable.active, true),
-        like(TopicTable.name, `%${searchString}%`),
+        ilike(TopicTable.name, `%${searchString}%`),
       ),
     );
 

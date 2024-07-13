@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "../ui/button";
@@ -12,17 +13,24 @@ type TableSearchProps = {
 
 const TableSearch = ({ searchString }: TableSearchProps) => {
   const [search, setSearch] = useState(searchString || "");
+  const router = useRouter();
 
   const handleOnChange = (event: React.FocusEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
 
   const getHref = () => {
-    console.log(search);
     if (search === "" || search === null) {
       return "?";
     }
-    return `?search=${search}`;
+    console.log(encodeURIComponent(search));
+    return `?search=${encodeURIComponent(search)}`;
+  };
+
+  const handleOnKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      router.push(getHref());
+    }
   };
 
   return (
@@ -30,6 +38,7 @@ const TableSearch = ({ searchString }: TableSearchProps) => {
       <Input
         value={search}
         onChange={handleOnChange}
+        onKeyUp={handleOnKeyUp}
         placeholder="Type here..."
         autoFocus
       />

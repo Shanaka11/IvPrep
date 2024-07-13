@@ -1,6 +1,6 @@
 import { getAllTopicsAction } from "@/questions/actions/topic/getAllTopicsAction";
 
-import TopicTable from "./(components)/TopicTable";
+import TopicTable from "../../questions/components/topic/TopicTable";
 
 const page = async ({
   searchParams,
@@ -8,7 +8,9 @@ const page = async ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const topics = await getAllTopicsAction(
-    searchParams.search as string | undefined,
+    searchParams.search
+      ? decodeURIComponent(searchParams.search as string)
+      : undefined,
   );
 
   return (
@@ -16,7 +18,11 @@ const page = async ({
       <h1 className="text-2xl font-bold">Topics</h1>
       <TopicTable
         topics={topics}
-        searchString={searchParams.search as string | undefined}
+        searchString={
+          searchParams.search
+            ? decodeURIComponent(searchParams.search as string)
+            : undefined
+        }
       />
     </main>
   );
