@@ -1,12 +1,21 @@
 "use client";
 
+import TableSearch from "@/components/table/TableSearch";
 import { Button } from "@/components/ui/button";
+import DataTable from "@/components/ui/dataTable";
+import { ReadTopicDto } from "@/questions/models/topic";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
 import TopicDrawer from "./TopicDrawer";
+import { topicTableColumns } from "./TopicTableColumns";
 
-const TopicTable = () => {
+type TopicTableProps = {
+  topics: ReadTopicDto[];
+  searchString?: string;
+};
+
+const TopicTable = ({ topics, searchString }: TopicTableProps) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleAddNewClick = () => {
@@ -42,10 +51,8 @@ const TopicTable = () => {
           <Trash2 className="h-4 w-4" />
         </Button>
       </div>
-      <div>
-        {/* Table */}
-        Table
-      </div>
+      <TableSearch searchString={searchString} />
+      <DataTable columns={topicTableColumns} data={topics} />
     </>
   );
 };

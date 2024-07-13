@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { and, eq } from "drizzle-orm";
+import { and, eq, like } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import { CreateTopicDto, ReadTopicDto, TopicTable } from "../models/topic";
@@ -67,6 +67,24 @@ export const getAllTopicsService = async (
     .select()
     .from(TopicTable)
     .where(eq(TopicTable.active, true));
+
+  return topics;
+};
+
+// get filtered topics
+export const getFilteredTopicsService = async (
+  searchString: string,
+  connection: PostgresJsDatabase<Record<string, never>>,
+): Promise<ReadTopicDto[]> => {
+  const topics = await connection
+    .select()
+    .from(TopicTable)
+    .where(
+      and(
+        eq(TopicTable.active, true),
+        like(TopicTable.name, `%${searchString}%`),
+      ),
+    );
 
   return topics;
 };

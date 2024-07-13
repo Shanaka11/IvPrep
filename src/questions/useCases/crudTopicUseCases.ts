@@ -10,6 +10,7 @@ import {
 import {
   createTopicService,
   getAllTopicsService,
+  getFilteredTopicsService,
   getTopicByIdService,
   getTopicByNameService,
   updateTopicService,
@@ -115,8 +116,13 @@ export const checkTopicExistsUseCase = async (
 
 //Get Many
 export const getAllTopicsUseCase = async (
+  searchString?: string,
   connection = db,
   getAllTopics = getAllTopicsService,
+  getFilteredTopics = getFilteredTopicsService,
 ) => {
+  if (searchString) {
+    return await getFilteredTopics(searchString, connection);
+  }
   return await getAllTopics(connection);
 };
