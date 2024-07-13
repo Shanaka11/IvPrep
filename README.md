@@ -19,7 +19,8 @@
 [x] Setup Random Question Selector Service
 [x] Create get random questions services
 [x] Setup Shadcn with theming support
-[ ] Create Topic page
+[x] Create Topic page
 [ ] Create Question page
+[ ] Add loading states to tables
 [ ] Create landing page
 [ ] Setup release please / Setup this when the app is ready for a staging or production deployment. (This is the CD pipeline for dev / prod in the future)
