@@ -1,4 +1,4 @@
-"user client";
+"use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { ReadTopicDto } from "@/questions/models/topic";
