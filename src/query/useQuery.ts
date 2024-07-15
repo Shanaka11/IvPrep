@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { useCache } from "./cache";
+
 type useQueryProps<TResponse> = {
   queryFn: () => Promise<TResponse>;
   queryKey: string;
@@ -13,9 +15,15 @@ export const useQuery = <TResponse>({
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
+  const { data: cacheData, setData: setCacheData } = useCache();
+
   const runQuery = useCallback(async () => {
     try {
       // Check if the value is in the cache using the query key
+      if (queryKey in cacheData) {
+        setData(cacheData[queryKey] as TResponse);
+        return;
+      }
       // If not fetch it from the backend
       // If yes return the value from the cache
       // for now assume we do not have a cache
@@ -24,6 +32,7 @@ export const useQuery = <TResponse>({
       setIsLoading(false);
       // Set the value to cache
       setData(response);
+      setCacheData(queryKey, response);
       setError(undefined);
     } catch (error: unknown) {
       if (error instanceof Error) {

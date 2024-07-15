@@ -5,6 +5,7 @@ import TableSearch from "@/components/table/TableSearch";
 import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/dataTable";
 import { useToast } from "@/components/ui/use-toast";
+import { useCache } from "@/query/cache";
 import { deleteTopicAction } from "@/questions/actions/topic/deleteTopicAction";
 import { ReadTopicDto } from "@/questions/models/topic";
 import { RowSelectionState } from "@tanstack/react-table";
@@ -24,6 +25,7 @@ const TopicTable = ({ topics, searchString }: TopicTableProps) => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
 
+  const { invalidateCache } = useCache();
   const { toast } = useToast();
 
   const handleAddNewClick = () => {
@@ -61,6 +63,8 @@ const TopicTable = ({ topics, searchString }: TopicTableProps) => {
         title: "Topics deleted successfully",
       });
       setSelectedRows({});
+      // Invalidate topic cache
+      invalidateCache("topics");
     } catch (error: unknown) {
       // Show error toast
       if (error instanceof Error) {

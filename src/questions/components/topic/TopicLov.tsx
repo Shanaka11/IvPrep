@@ -17,8 +17,8 @@ import {
 import { useQuery } from "@/query/useQuery";
 import { getAllTopicsAction } from "@/questions/actions/topic/getAllTopicsAction";
 import { ReadTopicDto } from "@/questions/models/topic";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronsUpDown } from "lucide-react";
+import { useState } from "react";
 
 const TopicLov = () => {
   const [open, setOpen] = useState(false);
