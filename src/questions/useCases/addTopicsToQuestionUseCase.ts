@@ -20,7 +20,7 @@ export const addTopicsToQuestionUseCase = async (
     throw new Error("You are not allowed to add topics to this question");
   // Check that
   // Check Topic Exist
-  connection.transaction(async (trx) => {
+  await connection.transaction(async (trx) => {
     for (const id of topicIds) {
       const topic = await getTopicByIdUseCase(id, trx);
       // Update QuestionTopicTable

@@ -13,11 +13,11 @@ export const getFullQuestionService = async (
   const results = await connection
     .select()
     .from(QuestionTable)
-    .innerJoin(
+    .leftJoin(
       QuestionTopicTable,
       eq(QuestionTopicTable.questionId, QuestionTable.id),
     )
-    .innerJoin(
+    .leftJoin(
       TopicTable,
       and(
         eq(TopicTable.id, QuestionTopicTable.topicId),

@@ -25,3 +25,4 @@
 [ ] Create landing page
 [ ] Setup release please / Setup this when the app is ready for a staging or production deployment. (This is the CD pipeline for dev / prod in the future)
 [ ] Fix auth error we get when in the server console (Clerk: auth() was called but Clerk can't detect usage of clerkMiddleware() (or the deprecated authMiddleware()). Please ensure the following:)
+[ ] Block users / admins from deleting topics when they are connected to a question

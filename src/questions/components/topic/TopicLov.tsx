@@ -20,7 +20,13 @@ import { ReadTopicDto } from "@/questions/models/topic";
 import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 
-const TopicLov = () => {
+// handle select
+type TopicLovProps = {
+  onSelect: (selectedTopic: ReadTopicDto) => void;
+  selectedTopics: Record<string, ReadTopicDto>;
+};
+// selected topic object {id, true}
+const TopicLov = ({ onSelect, selectedTopics }: TopicLovProps) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
@@ -28,13 +34,17 @@ const TopicLov = () => {
     data: topics,
     isLoading,
     error,
-    runQuery,
   } = useQuery<ReadTopicDto[]>({
     queryKey: "Topics",
     queryFn: () => {
       return getAllTopicsAction();
     },
   });
+
+  const handleOnSelect = (item: ReadTopicDto) => {
+    setOpen(false);
+    onSelect(item);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -55,18 +65,20 @@ const TopicLov = () => {
           <CommandEmpty>No items found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
-              {topics?.map((item) => (
-                <CommandItem
-                  key={item.id}
-                  value={item.name}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  {item.name}
-                </CommandItem>
-              ))}
+              {topics
+                ?.filter((item) => !selectedTopics || !selectedTopics[item.id])
+                .map((item) => (
+                  <CommandItem
+                    key={item.id}
+                    value={item.name}
+                    onSelect={() => {
+                      handleOnSelect(item);
+                    }}
+                    className="capitalize"
+                  >
+                    {item.name}
+                  </CommandItem>
+                ))}
             </CommandList>
           </CommandGroup>
         </Command>

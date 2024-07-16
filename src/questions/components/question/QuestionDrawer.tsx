@@ -1,5 +1,6 @@
 "use client";
 
+import Tag from "@/components/tag/Tag";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -19,11 +20,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { createFullQuestionAction } from "@/questions/actions/question/createFullQuestionAction";
 import {
   CreateQuestionDto,
   CreateQuestionSchema,
 } from "@/questions/models/question";
+import { ReadTopicDto } from "@/questions/models/topic";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import TopicLov from "../topic/TopicLov";
@@ -39,10 +44,56 @@ const QuestionDrawer = ({
 }: QuestionDrawerProps) => {
   const form = useForm<CreateQuestionDto>({
     resolver: zodResolver(CreateQuestionSchema),
+    defaultValues: {
+      question: "",
+      authorId: "1",
+    },
   });
 
+  const [selectedTopics, setSelectedTopics] = useState<
+    Record<string, ReadTopicDto>
+  >({});
+
+  const { toast } = useToast();
+
   const onSubmit = async (data: CreateQuestionDto) => {
-    console.log(data);
+    try {
+      console.log(data);
+      // Create question
+      const question = await createFullQuestionAction(
+        data,
+        Object.keys(selectedTopics).map((key) => parseInt(key)),
+      );
+      toast({
+        variant: "success",
+        title: "Question added successfully",
+      });
+
+      form.reset();
+      handleDrawerOpenChange(false);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
+      }
+    }
+  };
+
+  const handleTopicSelect = (selectedTopic: ReadTopicDto) => {
+    setSelectedTopics((prev) => ({
+      ...prev,
+      [selectedTopic.id]: selectedTopic,
+    }));
+  };
+
+  const handleTopicDeselect = (id: ReadTopicDto["id"]) => {
+    setSelectedTopics((prev) => {
+      const { [id]: omit, ...rest } = prev;
+      return rest;
+    });
   };
 
   return (
@@ -73,9 +124,22 @@ const QuestionDrawer = ({
                 </FormItem>
               )}
             />
+            {/* Added topics */}
+            <div className="flex gap-1 flex-wrap">
+              {Object.values(selectedTopics).map((topic) => (
+                <Tag
+                  title={topic.name}
+                  key={topic.id}
+                  handleClose={() => handleTopicDeselect(topic.id)}
+                />
+              ))}
+            </div>
             {/* Add topics */}
             {/* Add an autocomplete component */}
-            <TopicLov />
+            <TopicLov
+              onSelect={handleTopicSelect}
+              selectedTopics={selectedTopics}
+            />
           </form>
         </Form>
         <DrawerFooter>
