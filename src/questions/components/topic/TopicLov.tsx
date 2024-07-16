@@ -52,7 +52,7 @@ const TopicLov = () => {
       <PopoverContent className="p-0">
         <Command className="w-full">
           <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandEmpty>No items found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
               {topics?.map((item) => (
