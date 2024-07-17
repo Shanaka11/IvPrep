@@ -1,13 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import DataTable from "@/components/ui/dataTable";
+import { ReadQuestionDto } from "@/questions/models/question";
+import { RowSelectionState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
 import QuestionDrawer from "./QuestionDrawer";
+import { tableQuestionColumns } from "./QuestionTableColumns";
 
-const QuestionTable = () => {
+type QuestionTableProps = {
+  questions: ReadQuestionDto[];
+};
+
+const QuestionTable = ({ questions }: QuestionTableProps) => {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
 
   const handleAddNewClick = () => {
     setOpenDrawer(true);
@@ -51,6 +60,12 @@ const QuestionTable = () => {
           <Trash2 className="h-4 w-4" />
         </Button> */}
       </div>
+      <DataTable
+        columns={tableQuestionColumns}
+        data={questions}
+        rowSelection={selectedRows}
+        setRowSelection={setSelectedRows}
+      />
     </>
   );
 };

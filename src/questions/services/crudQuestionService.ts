@@ -48,3 +48,21 @@ export const updateQuestionService = async (
 
   return updatedQuestion;
 };
+
+// Get all questions
+
+export const getAllQuestionsService = async (
+  autherId: ReadQuestionDto["authorId"] | null,
+  connection: PostgresJsDatabase<Record<string, never>>,
+) => {
+  const query = connection
+    .select()
+    .from(QuestionTable)
+    .where(eq(QuestionTable.active, true));
+
+  if (autherId !== null) {
+    query.$dynamic().where(eq(QuestionTable.authorId, autherId));
+  }
+
+  return await query;
+};
