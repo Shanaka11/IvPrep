@@ -109,3 +109,16 @@ export const deleteQuestionUseCase = async (
   oldQuestion.active = false;
   return await updateQuestionUseCase(oldQuestion, userId, connection);
 };
+
+// bulk delete
+export const bulkDeleteQuestionUseCase = async (
+  questions: ReadQuestionDto[],
+  userId: ReadQuestionDto["authorId"],
+  connection = db,
+) => {
+  return await connection.transaction(async (trx) => {
+    for (const question of questions) {
+      await deleteQuestionUseCase(question, userId, trx);
+    }
+  });
+};

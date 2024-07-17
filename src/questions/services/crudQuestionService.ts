@@ -58,10 +58,18 @@ export const getAllQuestionsService = async (
   const query = connection
     .select()
     .from(QuestionTable)
-    .where(eq(QuestionTable.active, true));
+    .where(eq(QuestionTable.active, true))
+    .orderBy(QuestionTable.id);
 
   if (autherId !== null) {
-    query.$dynamic().where(eq(QuestionTable.authorId, autherId));
+    query
+      .$dynamic()
+      .where(
+        and(
+          eq(QuestionTable.active, true),
+          eq(QuestionTable.authorId, autherId),
+        ),
+      );
   }
 
   return await query;
