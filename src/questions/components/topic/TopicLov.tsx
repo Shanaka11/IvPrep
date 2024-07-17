@@ -34,7 +34,7 @@ const TopicLov = ({ onSelect, selectedTopics }: TopicLovProps) => {
     data: topics,
     isLoading,
     error,
-  } = useQuery<ReadTopicDto[]>({
+  } = useQuery<never, ReadTopicDto[]>({
     queryKey: "Topics",
     queryFn: () => {
       return getAllTopicsAction();

@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { deleteQuestionAction } from "@/questions/actions/question/deleteQuestionAction";
 import { ReadQuestionDto } from "@/questions/models/question";
 import { RowSelectionState } from "@tanstack/react-table";
-import { Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import QuestionDrawer from "./QuestionDrawer";
@@ -64,11 +64,20 @@ const QuestionTable = ({ questions }: QuestionTableProps) => {
     setDeleteOpen(true);
   };
 
+  const handleUpdateClick = () => {
+    setOpenDrawer(true);
+  };
+
   return (
     <>
       <QuestionDrawer
         open={openDrawer}
         handleDrawerOpenChange={setOpenDrawer}
+        question={
+          Object.keys(selectedRows).length === 1
+            ? questions[parseInt(Object.keys(selectedRows)[0])]
+            : undefined
+        }
       />
       <DeleteAlert
         open={deleteOpen}
@@ -88,7 +97,7 @@ const QuestionTable = ({ questions }: QuestionTableProps) => {
           <Plus className="h-4 w-4" />
         </Button>
         {/* Open the drawer with edit form, only available when single row is selected */}
-        {/* <Button
+        <Button
           variant="outline"
           size="icon"
           title="Update Selected Topic"
@@ -96,7 +105,7 @@ const QuestionTable = ({ questions }: QuestionTableProps) => {
           disabled={Object.keys(selectedRows).length !== 1}
         >
           <Pencil className="h-4 w-4" />
-        </Button> */}
+        </Button>
         {/* Show a dialog asking for confirmation */}
         <Button
           variant="outline"

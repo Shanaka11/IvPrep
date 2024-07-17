@@ -18,17 +18,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from "@/query/useQuery";
 import { createFullQuestionAction } from "@/questions/actions/question/createFullQuestionAction";
+import { getTopicsForQuestionAction } from "@/questions/actions/question/getTopicsForQuestionAction";
 import {
   CreateQuestionDto,
   CreateQuestionSchema,
+  ReadQuestionDto,
 } from "@/questions/models/question";
 import { ReadTopicDto } from "@/questions/models/topic";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import TopicLov from "../topic/TopicLov";
@@ -36,11 +38,13 @@ import TopicLov from "../topic/TopicLov";
 type QuestionDrawerProps = {
   open: boolean;
   handleDrawerOpenChange: (open: boolean) => void;
+  question?: ReadQuestionDto;
 };
 
 const QuestionDrawer = ({
   open,
   handleDrawerOpenChange,
+  question,
 }: QuestionDrawerProps) => {
   const form = useForm<CreateQuestionDto>({
     resolver: zodResolver(CreateQuestionSchema),
@@ -50,15 +54,55 @@ const QuestionDrawer = ({
     },
   });
 
+  const {
+    isLoading,
+    data: topics,
+    runQuery,
+  } = useQuery<ReadQuestionDto["id"], ReadTopicDto[]>({
+    queryKey: "question, topics",
+    queryFn: (questionId?: ReadQuestionDto["id"]) => {
+      console.log(questionId);
+      if (questionId) {
+        return getTopicsForQuestionAction(questionId);
+      }
+      return Promise.resolve([]);
+    },
+  });
+
   const [selectedTopics, setSelectedTopics] = useState<
     Record<string, ReadTopicDto>
   >({});
 
   const { toast } = useToast();
 
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        question: question?.question ?? "",
+      });
+
+      if (question?.id) {
+        // RunQuery to get the topics
+        runQuery(question.id, question.id.toString());
+      }
+    }
+  }, [open, form, question?.question, question?.id, runQuery]);
+
+  // Parser the topics when the data is loaded
+  useEffect(() => {
+    if (topics) {
+      const selectedTopics: Record<string, ReadTopicDto> = {};
+      topics.forEach((topic) => {
+        selectedTopics[topic.id.toString()] = topic;
+      });
+      setSelectedTopics(selectedTopics);
+    } else {
+      setSelectedTopics({});
+    }
+  }, [topics]);
+
   const onSubmit = async (data: CreateQuestionDto) => {
     try {
-      console.log(data);
       // Create question
       const question = await createFullQuestionAction(
         data,
@@ -100,9 +144,13 @@ const QuestionDrawer = ({
     <Drawer open={open} onOpenChange={handleDrawerOpenChange} direction="right">
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Add new question</DrawerTitle>
+          <DrawerTitle>
+            {question ? "Update question" : "Add new question"}
+          </DrawerTitle>
           <DrawerDescription>
-            Add a new question to the question bank
+            {question
+              ? "Change questions as needed"
+              : "Add a new question to the question bank"}
           </DrawerDescription>
         </DrawerHeader>
         <Form {...form}>
@@ -149,8 +197,7 @@ const QuestionDrawer = ({
             onClick={form.handleSubmit(onSubmit)}
             disabled={form.formState.isSubmitting}
           >
-            Add
-            {/* {topic ? "Update" : "Add"} */}
+            {question ? "Update" : "Add"}
           </Button>
           <Button
             className="w-full"
