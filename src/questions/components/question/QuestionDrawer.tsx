@@ -24,6 +24,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@/query/useQuery";
 import { createFullQuestionAction } from "@/questions/actions/question/createFullQuestionAction";
 import { getTopicsForQuestionAction } from "@/questions/actions/question/getTopicsForQuestionAction";
+import { updateQuestionAction } from "@/questions/actions/question/updateQuestionAction";
 import {
   CreateQuestionDto,
   CreateQuestionSchema,
@@ -62,7 +63,6 @@ const QuestionDrawer = ({
   } = useQuery<ReadQuestionDto["id"], ReadTopicDto[]>({
     queryKey: "question, topics",
     queryFn: (questionId?: ReadQuestionDto["id"]) => {
-      console.log(questionId);
       if (questionId) {
         return getTopicsForQuestionAction(questionId);
       }
@@ -80,6 +80,7 @@ const QuestionDrawer = ({
     if (open) {
       form.reset({
         question: question?.question ?? "",
+        authorId: question?.authorId ?? "1",
       });
 
       if (question?.id) {
@@ -87,7 +88,14 @@ const QuestionDrawer = ({
         runQuery(question.id, question.id.toString());
       }
     }
-  }, [open, form, question?.question, question?.id, runQuery]);
+  }, [
+    open,
+    form,
+    question?.question,
+    question?.id,
+    runQuery,
+    question?.authorId,
+  ]);
 
   // Parser the topics when the data is loaded
   useEffect(() => {
@@ -104,15 +112,28 @@ const QuestionDrawer = ({
 
   const onSubmit = async (data: CreateQuestionDto) => {
     try {
-      // Create question
-      const question = await createFullQuestionAction(
-        data,
-        Object.keys(selectedTopics).map((key) => parseInt(key)),
-      );
-      toast({
-        variant: "success",
-        title: "Question added successfully",
-      });
+      if (question) {
+        //update question
+        await updateQuestionAction(
+          { ...question, ...data },
+          topics?.map((topic) => topic.id) ?? [],
+          Object.keys(selectedTopics).map((key) => parseInt(key)),
+        );
+        toast({
+          variant: "success",
+          title: "Question updated successfully",
+        });
+      } else {
+        // Create question
+        await createFullQuestionAction(
+          data,
+          Object.keys(selectedTopics).map((key) => parseInt(key)),
+        );
+        toast({
+          variant: "success",
+          title: "Question added successfully",
+        });
+      }
 
       form.reset();
       handleDrawerOpenChange(false);

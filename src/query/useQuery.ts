@@ -40,7 +40,6 @@ export const useQuery = <TParams, TResponse>({
         setData(response);
         setCacheData(queryKey + extraQueryKeys, response);
         setError(undefined);
-        console.log(response);
         return response;
       } catch (error: unknown) {
         if (error instanceof Error) {
