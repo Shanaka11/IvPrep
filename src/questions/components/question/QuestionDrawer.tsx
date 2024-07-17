@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@/query/useQuery";
@@ -55,7 +56,7 @@ const QuestionDrawer = ({
   });
 
   const {
-    isLoading,
+    isLoading: isTopicsLoading,
     data: topics,
     runQuery,
   } = useQuery<ReadQuestionDto["id"], ReadTopicDto[]>({
@@ -174,13 +175,22 @@ const QuestionDrawer = ({
             />
             {/* Added topics */}
             <div className="flex gap-1 flex-wrap">
-              {Object.values(selectedTopics).map((topic) => (
-                <Tag
-                  title={topic.name}
-                  key={topic.id}
-                  handleClose={() => handleTopicDeselect(topic.id)}
-                />
-              ))}
+              {isTopicsLoading && (
+                <>
+                  <Skeleton className="w-20 h-6 rounded-full" />
+                  <Skeleton className="w-20 h-6 rounded-full" />
+                  <Skeleton className="w-20 h-6 rounded-full" />
+                  <Skeleton className="w-20 h-6 rounded-full" />
+                </>
+              )}
+              {!isTopicsLoading &&
+                Object.values(selectedTopics).map((topic) => (
+                  <Tag
+                    title={topic.name}
+                    key={topic.id}
+                    handleClose={() => handleTopicDeselect(topic.id)}
+                  />
+                ))}
             </div>
             {/* Add topics */}
             {/* Add an autocomplete component */}

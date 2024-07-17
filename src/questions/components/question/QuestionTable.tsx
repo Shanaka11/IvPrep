@@ -68,11 +68,18 @@ const QuestionTable = ({ questions }: QuestionTableProps) => {
     setOpenDrawer(true);
   };
 
+  const handleDrawerClose = (open: boolean) => {
+    if (!open) {
+      setSelectedRows({});
+    }
+    setOpenDrawer(open);
+  };
+
   return (
     <>
       <QuestionDrawer
         open={openDrawer}
-        handleDrawerOpenChange={setOpenDrawer}
+        handleDrawerOpenChange={handleDrawerClose}
         question={
           Object.keys(selectedRows).length === 1
             ? questions[parseInt(Object.keys(selectedRows)[0])]
