@@ -6,8 +6,6 @@ import { getQuestionTopicUseCase } from "@/questions/useCases/getQuestionTopicUs
 export const getTopicsForQuestionAction = async (
   questionId: ReadQuestionDto["id"],
 ) => {
-  console.log("getTopicsForQuestionAction");
-  console.log(questionId);
   const response = await getQuestionTopicUseCase(questionId);
   return response;
 };

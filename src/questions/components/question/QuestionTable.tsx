@@ -12,12 +12,19 @@ import { useState } from "react";
 
 import QuestionDrawer from "./QuestionDrawer";
 import { tableQuestionColumns } from "./QuestionTableColumns";
+import QuestionTableSearch from "./QuestionTableSearch";
 
 type QuestionTableProps = {
   questions: ReadQuestionDto[];
+  searchString: string | null;
+  topicIds: ReadQuestionDto["id"][];
 };
 
-const QuestionTable = ({ questions }: QuestionTableProps) => {
+const QuestionTable = ({
+  questions,
+  searchString,
+  topicIds,
+}: QuestionTableProps) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
@@ -124,6 +131,7 @@ const QuestionTable = ({ questions }: QuestionTableProps) => {
           <Trash2 className="h-4 w-4" />
         </Button>
       </div>
+      <QuestionTableSearch searchString={searchString} topicIds={topicIds} />
       <DataTable
         columns={tableQuestionColumns}
         data={questions}

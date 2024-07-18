@@ -23,12 +23,11 @@ import { useState } from "react";
 // handle select
 type TopicLovProps = {
   onSelect: (selectedTopic: ReadTopicDto) => void;
-  selectedTopics: Record<string, ReadTopicDto>;
+  selectedTopics: Record<string, unknown>;
 };
 // selected topic object {id, true}
 const TopicLov = ({ onSelect, selectedTopics }: TopicLovProps) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
 
   const {
     data: topics,

@@ -23,7 +23,6 @@ const TableSearch = ({ searchString }: TableSearchProps) => {
     if (search === "" || search === null) {
       return "?";
     }
-    console.log(encodeURIComponent(search));
     return `?search=${encodeURIComponent(search)}`;
   };
 
