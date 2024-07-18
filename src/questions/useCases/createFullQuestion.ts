@@ -4,7 +4,7 @@ import { CreateQuestionDto, ReadQuestionDto } from "../models/question";
 import { ReadTopicDto } from "../models/topic";
 import { addTopicsToQuestionUseCase } from "./addTopicsToQuestionUseCase";
 import { createQuestionUseCase } from "./crudQuestionUseCases";
-import { getFullQuestionById } from "./getFullQuestionById";
+import { getFullQuestionByIdUseCase } from "./getFullQuestionById";
 
 // params, question, topics["id"] and service
 export const createFullQuestion = async (
@@ -19,7 +19,7 @@ export const createFullQuestion = async (
     // Attach topics to question
     await addTopicsToQuestionUseCase(createdQuestion.id, topicIds, userId, trx);
     // Return the created question
-    return await getFullQuestionById(createdQuestion.id, trx);
+    return await getFullQuestionByIdUseCase(createdQuestion.id, trx);
   });
 
   return createdQuestion;

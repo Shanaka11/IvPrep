@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { and, eq } from "drizzle-orm";
+import { and, eq, ilike, inArray } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import {
@@ -7,6 +7,7 @@ import {
   QuestionTable,
   ReadQuestionDto,
 } from "../models/question";
+import { QuestionTopicTable } from "../models/questionTopic";
 
 // Create
 export const createQuestionService = async (
@@ -47,4 +48,74 @@ export const updateQuestionService = async (
     .returning();
 
   return updatedQuestion;
+};
+
+// Get all questions
+
+export const getAllQuestionsService = async (
+  autherId: ReadQuestionDto["authorId"] | null,
+  searchString: string | null,
+  topicIds: ReadQuestionDto["id"][] | null,
+  connection: PostgresJsDatabase<Record<string, never>>,
+) => {
+  const query = connection
+    .selectDistinctOn([QuestionTable.id], {
+      id: QuestionTable.id,
+      question: QuestionTable.question,
+      authorId: QuestionTable.authorId,
+      active: QuestionTable.active,
+      createdAt: QuestionTable.createdAt,
+      updatedAt: QuestionTable.updatedAt,
+    })
+    .from(QuestionTable)
+    .where(eq(QuestionTable.active, true))
+    .orderBy(QuestionTable.id);
+
+  if (autherId !== null && searchString !== null) {
+    query
+      .$dynamic()
+      .where(
+        and(
+          eq(QuestionTable.active, true),
+          eq(QuestionTable.authorId, autherId),
+          ilike(QuestionTable.question, `%${searchString}%`),
+        ),
+      );
+  }
+
+  if (autherId !== null && searchString === null) {
+    query
+      .$dynamic()
+      .where(
+        and(
+          eq(QuestionTable.active, true),
+          eq(QuestionTable.authorId, autherId),
+        ),
+      );
+  }
+
+  if (autherId === null && searchString !== null) {
+    query
+      .$dynamic()
+      .where(
+        and(
+          eq(QuestionTable.active, true),
+          ilike(QuestionTable.question, `%${searchString}%`),
+        ),
+      );
+  }
+
+  if (topicIds !== null) {
+    query
+      .$dynamic()
+      .innerJoin(
+        QuestionTopicTable,
+        and(
+          eq(QuestionTable.id, QuestionTopicTable.questionId),
+          inArray(QuestionTopicTable.topicId, topicIds),
+        ),
+      );
+  }
+
+  return await query;
 };

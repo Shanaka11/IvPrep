@@ -2,12 +2,12 @@ import { ReadQuestionDto } from "@/questions/models/question";
 import { ReadTopicDto } from "@/questions/models/topic";
 
 type ResultType = {
-  topic: ReadTopicDto;
+  topic: ReadTopicDto | null;
   question: ReadQuestionDto;
   question_topic: {
     questionId: ReadQuestionDto["id"];
     topicId: ReadTopicDto["id"];
-  };
+  } | null;
 };
 
 export const formatFullQuestionDrizzle = (results: ResultType[]) => {
@@ -36,10 +36,12 @@ export const formatFullQuestionDrizzle = (results: ResultType[]) => {
       };
     }
 
-    questionsWithTopics[result.question.id].topics.push({
-      id: result.topic.id,
-      name: result.topic.name,
-    });
+    if (result.topic != null) {
+      questionsWithTopics[result.question.id].topics.push({
+        id: result.topic.id,
+        name: result.topic.name,
+      });
+    }
   });
 
   return Object.values(questionsWithTopics);

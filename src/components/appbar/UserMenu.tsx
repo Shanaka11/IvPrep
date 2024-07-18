@@ -35,16 +35,12 @@ const UserMenu = async () => {
           {user.firstName} {user.lastName}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link className="w-full" href="/questions">
-            Questions
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link className="w-full" href="/topics">
-            Topics
-          </Link>
-        </DropdownMenuItem>
+        <Link href="/questions">
+          <DropdownMenuItem>Questions</DropdownMenuItem>
+        </Link>
+        <Link href="/topics">
+          <DropdownMenuItem>Topics</DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <SignOutButton>

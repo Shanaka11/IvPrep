@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { useCache } from "@/query/cache";
 import { createTopicAction } from "@/questions/actions/topic/insertTopicAction";
 import { updateTopicAction } from "@/questions/actions/topic/updateTopicAction";
 import {
@@ -39,6 +40,8 @@ const TopicDrawer = ({
   handleDrawerOpenChange,
   topic,
 }: TopicDrawerProps) => {
+  const { invalidateCache } = useCache();
+
   const form = useForm<CreateTopicDto>({
     resolver: zodResolver(CreateTopicSchema),
     defaultValues: {
@@ -71,6 +74,7 @@ const TopicDrawer = ({
         });
       }
       form.reset();
+      invalidateCache("topics");
       handleDrawerOpenChange(false);
     } catch (error: unknown) {
       if (error instanceof Error) {

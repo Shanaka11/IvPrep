@@ -1,10 +1,8 @@
-"use client";
-
 import { Checkbox } from "@/components/ui/checkbox";
-import { ReadTopicDto } from "@/questions/models/topic";
+import { ReadQuestionDto } from "@/questions/models/question";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const topicTableColumns: ColumnDef<ReadTopicDto>[] = [
+export const tableQuestionColumns: ColumnDef<ReadQuestionDto>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -36,7 +34,7 @@ export const topicTableColumns: ColumnDef<ReadTopicDto>[] = [
     size: 50,
   },
   {
-    accessorKey: "name",
-    header: "Topic",
+    accessorKey: "question",
+    header: "Question",
   },
 ];
