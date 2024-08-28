@@ -109,7 +109,10 @@ const QuestionTableSearch = ({
           placeholder="Type here..."
           autoFocus
         />
-        <TopicLov onSelect={handleOnSelect} selectedTopics={selectedTopics} />
+        <TopicLov
+          onTopicSelect={handleOnSelect}
+          selectedTopics={selectedTopics}
+        />
         <Link href={getHref()}>
           <Button>Search</Button>
         </Link>

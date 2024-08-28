@@ -1,5 +1,6 @@
 import { db } from "@/db/drizzle";
 
+import { ReadQuestionDto } from "../models/question";
 import { ReadTopicDto } from "../models/topic";
 import { getQuestionsForTopicsService } from "../services/getQuestionsForTopicsService";
 
@@ -13,7 +14,10 @@ export const getRandomQuestionsUseCase = async (
   // Get all the recrords from the database that is connected to the topic
   const questions = await getQuestionsForTopics(topicIds, connecttion);
   // Get random 10 questions from the records
-  return getRandomElementsFromArray(questions, NUMBER_OF_QUESTIONS);
+  return getRandomElementsFromArray(
+    questions,
+    NUMBER_OF_QUESTIONS,
+  ) as ReadQuestionDto[];
 };
 
 function getRandomElementsFromArray(arr: any[], n: number) {
@@ -22,7 +26,8 @@ function getRandomElementsFromArray(arr: any[], n: number) {
 
   // Edge case: If the array has fewer than n elements
   if (n > len) {
-    throw new Error("Array has fewer elements than requested");
+    // return all elements
+    return arr;
   }
 
   // Create a copy of the array to shuffle

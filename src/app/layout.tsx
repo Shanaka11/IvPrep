@@ -26,7 +26,9 @@ export default function RootLayout({
   return (
     <Providers>
       <html lang="en">
-        <body className={`${roboto.className} grid grid-rows-[50px_1fr]`}>
+        <body
+          className={`${roboto.className} grid grid-rows-[50px_1fr] h-dvh w-screen pd-2`}
+        >
           <Appbar />
           {children}
           <Toaster />
