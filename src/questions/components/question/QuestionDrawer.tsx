@@ -188,7 +188,7 @@ const QuestionDrawer = ({
                 <FormItem>
                   <FormLabel>Topic</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Question" {...field} />
+                    <Textarea placeholder="Question" {...field} autoFocus />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -216,7 +216,7 @@ const QuestionDrawer = ({
             {/* Add topics */}
             {/* Add an autocomplete component */}
             <TopicLov
-              onSelect={handleTopicSelect}
+              onTopicSelect={handleTopicSelect}
               selectedTopics={selectedTopics}
             />
           </form>

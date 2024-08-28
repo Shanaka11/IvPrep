@@ -14,19 +14,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { useQuery } from "@/query/useQuery";
 import { getAllTopicsAction } from "@/questions/actions/topic/getAllTopicsAction";
 import { ReadTopicDto } from "@/questions/models/topic";
 import { ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { HTMLAttributes, useState } from "react";
 
 // handle select
 type TopicLovProps = {
-  onSelect: (selectedTopic: ReadTopicDto) => void;
+  onTopicSelect: (selectedTopic: ReadTopicDto) => void;
   selectedTopics: Record<string, unknown>;
+  title?: string;
 };
 // selected topic object {id, true}
-const TopicLov = ({ onSelect, selectedTopics }: TopicLovProps) => {
+const TopicLov = ({
+  onTopicSelect,
+  selectedTopics,
+  title,
+  className,
+}: TopicLovProps & HTMLAttributes<HTMLButtonElement>) => {
   const [open, setOpen] = useState(false);
 
   const {
@@ -42,7 +49,7 @@ const TopicLov = ({ onSelect, selectedTopics }: TopicLovProps) => {
 
   const handleOnSelect = (item: ReadTopicDto) => {
     setOpen(false);
-    onSelect(item);
+    onTopicSelect(item);
   };
 
   return (
@@ -52,9 +59,9 @@ const TopicLov = ({ onSelect, selectedTopics }: TopicLovProps) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className={cn("w-full justify-between", className)}
         >
-          Add topic ...
+          {title ? title : "Add topic ..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

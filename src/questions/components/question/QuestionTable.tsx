@@ -33,6 +33,7 @@ const QuestionTable = ({
 
   const handleAddNewClick = () => {
     setOpenDrawer(true);
+    setSelectedRows({});
   };
 
   const handleDeleteAlertState = (open: boolean) => {

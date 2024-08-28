@@ -14,7 +14,7 @@ const page = async ({
   );
 
   return (
-    <main className="flex flex-col gap-2 w-full max-w-screen-2xl px-6 mx-auto mt-4">
+    <main className="flex flex-col gap-2 w-full max-w-screen-2xl px-6 mx-auto mt-4 container">
       <h1 className="text-2xl font-bold">Topics</h1>
       <TopicTable
         topics={topics}

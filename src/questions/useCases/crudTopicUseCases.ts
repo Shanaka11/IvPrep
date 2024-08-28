@@ -5,7 +5,6 @@ import {
   CreateTopicSchema,
   ReadTopicDto,
   ReadTopicSchema,
-  TopicTable,
 } from "../models/topic";
 import {
   createTopicService,

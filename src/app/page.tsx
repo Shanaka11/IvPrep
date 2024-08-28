@@ -1,7 +1,13 @@
-export default function Home() {
+import QuestionGenerator from "@/questions/components/question/QuestionGenerator";
+
+export default async function Home() {
+  // This is the home page, when a quiz is not generated
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Hello World</h1>
+    <main>
+      {/* Select Topics Component */}
+      <div className="grid h-96 place-items-center ">
+        <QuestionGenerator />
+      </div>
     </main>
   );
 }
