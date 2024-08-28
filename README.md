@@ -28,3 +28,4 @@
 - [ ] Block users / admins from deleting topics when they are connected to a question
 - [ ] Disable the grid/ page until the delete operation is complete
 - [ ] Redirect to main when navigated to a unautherized page
+- [ ] Fix issue where we get user not found error when going to the homepage as a non logged in user
