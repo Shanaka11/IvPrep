@@ -5,6 +5,7 @@ import "./globals.css";
 
 import Appbar from "@/components/appbar/Appbar";
 import Providers from "@/components/providers/Providers";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
@@ -29,9 +30,16 @@ export default function RootLayout({
         <body
           className={`${roboto.className} grid grid-rows-[50px_1fr] h-dvh w-screen pd-2`}
         >
-          <Appbar />
-          {children}
-          <Toaster />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Appbar />
+            {children}
+            <Toaster />
+          </ThemeProvider>
         </body>
       </html>
     </Providers>
