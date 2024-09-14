@@ -7,8 +7,8 @@ import UserMenu from "./UserMenu";
 
 const Appbar = () => {
   return (
-    <div className="bg-blue-700 flex justify-between items-center px-4">
-      <Link className="w-full text-xl" href="/">
+    <div className="flex justify-between items-center px-4">
+      <Link className="text-xl" href="/">
         IvPrep
       </Link>
       <SignedOut>
