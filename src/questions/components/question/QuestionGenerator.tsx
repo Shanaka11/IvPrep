@@ -52,8 +52,8 @@ const QuestionGenerator = ({ topics, small }: QuestionGeneratorProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="w-[700px] flex max-w-full px-1">
+    <div className="flex flex-col gap-2 w-full max-w-[700px]">
+      <div className="flex">
         <TopicLov
           onTopicSelect={handleOnSelect}
           selectedTopics={selectedTopics}
