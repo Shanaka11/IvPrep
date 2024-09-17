@@ -62,7 +62,7 @@ const TopicLov = ({
           className={cn("w-full justify-between", className)}
         >
           {title ? title : "Add topic ..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-primary" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0">
