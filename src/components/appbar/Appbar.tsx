@@ -1,5 +1,4 @@
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
-import Link from "next/link";
 import React from "react";
 
 import { ModeToggle } from "../modeToggle/ModeToggle";
