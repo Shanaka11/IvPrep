@@ -12,6 +12,8 @@ import TopicLov from "../topic/TopicLov";
 type TSelectedTopics = Pick<ReadTopicDto, "id" | "name">;
 type QuestionGeneratorProps = {
   topics?: TSelectedTopics[];
+  title?: string;
+  buttonTitle?: string;
   small?: boolean;
 };
 
@@ -23,7 +25,12 @@ const parseSelectedTopics = (topics: TSelectedTopics[]) => {
   return parsedSelectedTopics;
 };
 
-const QuestionGenerator = ({ topics, small }: QuestionGeneratorProps) => {
+const QuestionGenerator = ({
+  topics,
+  small,
+  title,
+  buttonTitle,
+}: QuestionGeneratorProps) => {
   const [selectedTopics, setSelectedTopics] = useState<
     Record<string, TSelectedTopics>
   >(topics !== undefined ? parseSelectedTopics(topics) : {});
@@ -58,13 +65,14 @@ const QuestionGenerator = ({ topics, small }: QuestionGeneratorProps) => {
           onTopicSelect={handleOnSelect}
           selectedTopics={selectedTopics}
           className="h-14 rounded-s-full"
-          title="Select Topics"
+          title={title ? title : `Select Topics`}
         />
         <Button
           className="h-14 rounded-e-full"
           title="Generate Quiz"
           onClick={handleGenerateQuizOnClick}
         >
+          {buttonTitle && <span className="mr-4">{buttonTitle}</span>}
           <CheckCheck size={24} />
         </Button>
       </div>

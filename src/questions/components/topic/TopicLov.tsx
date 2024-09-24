@@ -26,6 +26,7 @@ type TopicLovProps = {
   onTopicSelect: (selectedTopic: ReadTopicDto) => void;
   selectedTopics: Record<string, unknown>;
   title?: string;
+  buttonTitle?: string;
 };
 // selected topic object {id, true}
 const TopicLov = ({
