@@ -34,11 +34,11 @@
   }
 
   .dark {
-    --background: 225 10% 30%;
+    --background: 209 35% 15%;
     --foreground: 280 23% 95%;
-    --card: 225 10% 30%;
+    --card: 209 83% 9%;
     --card-foreground: 280 23% 95%;
-    --popover: 225 10% 30%;
+    --popover: 209 83% 9%;
     --popover-foreground: 280 23% 95%;
     --primary: 85 72% 40%;
     --primary-foreground: 280 23% 95%;
@@ -52,9 +52,9 @@
     --destructive-foreground: 280 23% 95%;
     --success: 145, 100%, 39%;
     --success-foreground: 280 23% 95%;
-    --border: 85 72% 40%;
-    --input: 85 72% 40%;
-    --ring: 85 72% 40%;
+    --border: 85, 87.96%, 23.07%;
+    --input: 85, 87.96%, 23.07%;
+    --ring: 85, 87.96%, 23.07%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;

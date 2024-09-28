@@ -11,7 +11,10 @@ export default async function Home() {
           <div className="max-w-[300px] w-full">
             <Logo />
           </div>
-          <QuestionGenerator />
+          <QuestionGenerator
+            title="Select a topic to get started"
+            buttonTitle="Generate Quiz"
+          />
         </div>
       </div>
     </main>
