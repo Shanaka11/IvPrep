@@ -53,7 +53,7 @@ const QuestionGenerator = ({
 
   const handleGenerateQuizOnClick = () => {
     const selectedTopicIds = Object.values(selectedTopics)
-      .map((item) => encodeURI(`${item.id},${item.name}`))
+      .map((item) => encodeURIComponent(`${item.id},${item.name}`))
       .join("&topic=");
     router.push(`/quiz?topic=${selectedTopicIds}`);
   };
