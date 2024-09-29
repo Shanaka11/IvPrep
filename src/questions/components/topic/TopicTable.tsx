@@ -99,7 +99,6 @@ const TopicTable = ({ topics, searchString }: TopicTableProps) => {
       <div className="flex gap-2">
         {/* When clicked open the drawer with edit form */}
         <Button
-          variant="outline"
           size="icon"
           title="Insert New Topic"
           onClick={handleAddNewClick}
@@ -109,7 +108,6 @@ const TopicTable = ({ topics, searchString }: TopicTableProps) => {
         </Button>
         {/* Open the drawer with edit form, only available when single row is selected */}
         <Button
-          variant="outline"
           size="icon"
           title="Update Selected Topic"
           onClick={handleUpdateClick}
@@ -119,7 +117,6 @@ const TopicTable = ({ topics, searchString }: TopicTableProps) => {
         </Button>
         {/* Show a dialog asking for confirmation */}
         <Button
-          variant="outline"
           size="icon"
           title="Delete Selected Topic"
           onClick={handleDeleteClick}

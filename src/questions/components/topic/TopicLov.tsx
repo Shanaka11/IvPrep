@@ -60,7 +60,7 @@ const TopicLov = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between", className)}
+          className={cn("w-full justify-between bg-card", className)}
         >
           {title ? title : "Add topic ..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-primary" />
