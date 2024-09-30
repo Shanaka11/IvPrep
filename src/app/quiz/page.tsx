@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/separator";
 import { generateQuizAction } from "@/questions/actions/question/generateQuizAction";
 import QuestionGenerator from "@/questions/components/question/QuestionGenerator";
 import Quiz from "@/questions/components/question/Quiz";
@@ -14,6 +15,7 @@ const page = async ({
   return (
     <div className="p-2 w-screen container">
       <QuestionGenerator topics={topics} small />
+      <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
       <Quiz questions={questions} />
     </div>
   );
