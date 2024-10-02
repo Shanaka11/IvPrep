@@ -7,14 +7,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { generateQuizAction } from "@/questions/actions/question/generateQuizAction";
 import { ReadQuestionDto } from "@/questions/models/question";
 import React from "react";
 
 type QuizProps = {
-  questions: ReadQuestionDto[];
+  topics: {
+    id: number;
+    name: string;
+  }[];
 };
 
-const Quiz = ({ questions }: QuizProps) => {
+const Quiz = async ({ topics }: QuizProps) => {
+  const questions = await generateQuizAction(topics.map((item) => item.id));
   return (
     <div className="flex gap-4 flex-col flex-wrap mt-5">
       {questions.length === 0 ? (
