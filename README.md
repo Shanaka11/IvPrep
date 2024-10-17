@@ -23,7 +23,7 @@
 - [x] Create Question page
 - [ ] Add loading states to tables
 - [x] Create landing page
-- [ ] Fix auth error we get when in the server console (Clerk: auth() was called but Clerk can't detect usage of clerkMiddleware() (or the deprecated authMiddleware()). Please ensure the following:)
+- [x] Fix auth error we get when in the server console (Clerk: auth() was called but Clerk can't detect usage of clerkMiddleware() (or the deprecated authMiddleware()). Please ensure the following:)
 - [ ] Block users / admins from deleting topics when they are connected to a question
 - [x] Disable the grid/ page until the delete operation is complete
 - [ ] Redirect to main when navigated to a unautherized page
