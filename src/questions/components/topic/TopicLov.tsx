@@ -46,7 +46,7 @@ const TopicLov = ({
   } = useQuery<never, ReadTopicDto[]>({
     queryKey: "Topics",
     queryFn: () => {
-      return getAllTopicsAction();
+      return getAllTopicsAction(null);
     },
   });
 
