@@ -1,30 +1,21 @@
-import { getAllTopicsAction } from "@/questions/actions/topic/getAllTopicsAction";
+import TopicTableWrapper from "@/questions/components/topic/TopicTableWrapper";
+import { Suspense } from "react";
 
-import TopicTable from "../../questions/components/topic/TopicTable";
+import TopicTableLoading from "./(components)/TopicTableLoading";
 
-const page = async ({
+const page = ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const topics = await getAllTopicsAction(
-    searchParams.search
-      ? decodeURIComponent(searchParams.search as string)
-      : undefined,
-  );
+  const decodedSearchParams = searchParams.search
+    ? decodeURIComponent(searchParams.search as string)
+    : null;
 
   return (
-    <main className="flex flex-col gap-2 w-full max-w-screen-2xl px-6 mx-auto mt-4 container">
-      <h1 className="text-2xl font-bold">Topics</h1>
-      <TopicTable
-        topics={topics}
-        searchString={
-          searchParams.search
-            ? decodeURIComponent(searchParams.search as string)
-            : undefined
-        }
-      />
-    </main>
+    <Suspense key={Date.now()} fallback={<TopicTableLoading />}>
+      <TopicTableWrapper searchString={decodedSearchParams} />;
+    </Suspense>
   );
 };
 

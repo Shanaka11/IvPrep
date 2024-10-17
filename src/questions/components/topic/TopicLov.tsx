@@ -27,6 +27,7 @@ type TopicLovProps = {
   selectedTopics: Record<string, unknown>;
   title?: string;
   buttonTitle?: string;
+  disabled?: boolean;
 };
 // selected topic object {id, true}
 const TopicLov = ({
@@ -34,6 +35,7 @@ const TopicLov = ({
   selectedTopics,
   title,
   className,
+  disabled,
 }: TopicLovProps & HTMLAttributes<HTMLButtonElement>) => {
   const [open, setOpen] = useState(false);
 
@@ -44,7 +46,7 @@ const TopicLov = ({
   } = useQuery<never, ReadTopicDto[]>({
     queryKey: "Topics",
     queryFn: () => {
-      return getAllTopicsAction();
+      return getAllTopicsAction(null);
     },
   });
 
@@ -60,7 +62,8 @@ const TopicLov = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between", className)}
+          className={cn("w-full justify-between bg-card", className)}
+          disabled={disabled}
         >
           {title ? title : "Add topic ..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 text-primary" />

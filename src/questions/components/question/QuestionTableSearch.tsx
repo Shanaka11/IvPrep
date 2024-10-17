@@ -15,11 +15,13 @@ import TopicLov from "../topic/TopicLov";
 type QuestionTableSearchProps = {
   searchString: string | null;
   topicIds: ReadTopicDto["id"][];
+  disabled?: boolean;
 };
 
 const QuestionTableSearch = ({
   searchString,
   topicIds,
+  disabled,
 }: QuestionTableSearchProps) => {
   const [search, setSearch] = useState(searchString ?? "");
   const [selectedTopics, setSelectedTopics] = useState<
@@ -29,7 +31,7 @@ const QuestionTableSearch = ({
   const { data: topics, isLoading } = useQuery<never, ReadTopicDto[]>({
     queryKey: "Topics",
     queryFn: () => {
-      return getAllTopicsAction();
+      return getAllTopicsAction(null);
     },
   });
 
@@ -51,12 +53,7 @@ const QuestionTableSearch = ({
     }
   }, [topicIds, topics]);
 
-  useEffect(() => {
-    router.push(getHref());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTopics]);
-
-  const getHref = () => {
+  const getHref = (selectedTopics: Record<string, ReadTopicDto>) => {
     const selectedTopicIds = Object.keys(selectedTopics);
 
     // if both are empty, return "?"
@@ -77,7 +74,7 @@ const QuestionTableSearch = ({
 
   const handleOnKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      router.push(getHref());
+      router.push(getHref(selectedTopics));
     }
   };
 
@@ -97,6 +94,8 @@ const QuestionTableSearch = ({
       const { [id]: omit, ...rest } = prev;
       return rest;
     });
+    const { [id]: omit, ...currentSelectedTopics } = selectedTopics;
+    router.push(getHref(currentSelectedTopics));
   };
 
   return (
@@ -108,13 +107,15 @@ const QuestionTableSearch = ({
           onKeyUp={handleOnKeyUp}
           placeholder="Type here..."
           autoFocus
+          disabled={disabled}
         />
         <TopicLov
           onTopicSelect={handleOnSelect}
           selectedTopics={selectedTopics}
+          disabled={disabled}
         />
-        <Link href={getHref()}>
-          <Button>Search</Button>
+        <Link href={getHref(selectedTopics)}>
+          <Button disabled={disabled}>Search</Button>
         </Link>
       </div>
       <div className="flex gap-2">

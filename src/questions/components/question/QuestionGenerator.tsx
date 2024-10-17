@@ -2,6 +2,7 @@
 
 import Tag from "@/components/tag/Tag";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 import { ReadTopicDto } from "@/questions/models/topic";
 import { CheckCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -36,6 +37,7 @@ const QuestionGenerator = ({
   >(topics !== undefined ? parseSelectedTopics(topics) : {});
 
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleOnSelect = (selectedTopic: ReadTopicDto) => {
     setSelectedTopics((prev) => ({
@@ -52,8 +54,15 @@ const QuestionGenerator = ({
   };
 
   const handleGenerateQuizOnClick = () => {
+    if (Object.keys(selectedTopics).length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Please select at least one topic",
+      });
+      return;
+    }
     const selectedTopicIds = Object.values(selectedTopics)
-      .map((item) => encodeURI(`${item.id},${item.name}`))
+      .map((item) => `${item.id},${encodeURIComponent(item.name)}`)
       .join("&topic=");
     router.push(`/quiz?topic=${selectedTopicIds}`);
   };
