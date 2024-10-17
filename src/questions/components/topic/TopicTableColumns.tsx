@@ -1,5 +1,3 @@
-"use client";
-
 import { Checkbox } from "@/components/ui/checkbox";
 import { ReadTopicDto } from "@/questions/models/topic";
 import { ColumnDef } from "@tanstack/react-table";

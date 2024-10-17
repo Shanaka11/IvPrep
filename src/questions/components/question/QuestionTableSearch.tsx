@@ -31,7 +31,7 @@ const QuestionTableSearch = ({
   const { data: topics, isLoading } = useQuery<never, ReadTopicDto[]>({
     queryKey: "Topics",
     queryFn: () => {
-      return getAllTopicsAction();
+      return getAllTopicsAction(null);
     },
   });
 

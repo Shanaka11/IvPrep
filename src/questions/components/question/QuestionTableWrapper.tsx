@@ -1,5 +1,4 @@
 import { getUserQuestionsAction } from "@/questions/actions/question/getUserQuestionsAction";
-import { parseTopics } from "@/util/parseTopics";
 import React from "react";
 
 import QuestionTable from "./QuestionTable";

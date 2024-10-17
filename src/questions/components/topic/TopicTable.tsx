@@ -17,7 +17,7 @@ import { topicTableColumns } from "./TopicTableColumns";
 
 type TopicTableProps = {
   topics: ReadTopicDto[];
-  searchString?: string;
+  searchString: string | null;
 };
 
 const TopicTable = ({ topics, searchString }: TopicTableProps) => {

@@ -128,7 +128,7 @@ export const checkTopicExistsUseCase = async (
 
 //Get Many
 export const getAllTopicsUseCase = async (
-  searchString?: string,
+  searchString: string | null,
   connection = db,
   getAllTopics = getAllTopicsService,
   getFilteredTopics = getFilteredTopicsService,

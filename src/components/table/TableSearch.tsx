@@ -8,10 +8,11 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 type TableSearchProps = {
-  searchString?: string;
+  searchString: string | null;
+  disabled?: boolean;
 };
 
-const TableSearch = ({ searchString }: TableSearchProps) => {
+const TableSearch = ({ searchString, disabled }: TableSearchProps) => {
   const [search, setSearch] = useState(searchString || "");
   const router = useRouter();
 
@@ -40,10 +41,11 @@ const TableSearch = ({ searchString }: TableSearchProps) => {
         onKeyUp={handleOnKeyUp}
         placeholder="Type here..."
         autoFocus
+        disabled={disabled}
       />
 
-      <Link href={getHref()}>
-        <Button>Search</Button>
+      <Link href={disabled ? "#" : getHref()}>
+        <Button disabled={disabled}>Search</Button>
       </Link>
     </div>
   );
