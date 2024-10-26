@@ -1,4 +1,3 @@
-import { db } from "@/db/drizzle";
 import { and, eq, ilike, inArray } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 

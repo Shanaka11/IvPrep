@@ -5,12 +5,11 @@ import postgres from "postgres";
 
 dotenv.config();
 
-const migrationClient = postgres(process.env.DATABASE_URL as string, {
-  max: 1,
-});
-
 const startMigration = async () => {
-  console.log("Starting migration");
+  const migrationClient = postgres(process.env.DATABASE_URL as string, {
+    max: 1,
+  });
+  console.log("Starting migration", process.env.DATABASE_URL as string);
   await migrate(drizzle(migrationClient), {
     migrationsFolder: "./src/db/migrations",
   });
