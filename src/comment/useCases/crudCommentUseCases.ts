@@ -86,15 +86,13 @@ export const getCommentByIdUseCase = async (
 // Update
 export const updateCommentUseCase = async (
   comment: ReadCommentDto,
+  userId: string,
   connection = db,
   updateComment = updateCommentService,
-  getUser = getAuthenticatedUser,
 ) => {
   try {
     // Validate the comment
     const validatedComment = ReadCommentSchema.parse(comment);
-    // Get the current user
-    const userId = getUser();
 
     // Check if the user is same as the auther of the comment or the auther of the question
     if (validatedComment.authorId !== userId)
