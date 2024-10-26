@@ -1,6 +1,7 @@
 import { getAuthenticatedUser } from "@/auth/getAuthenticatedUser";
 import { db } from "@/db/drizzle";
 import { generateId } from "@/lib/generateId";
+import { getQuestionByIdService } from "@/questions/services/crudQuestionService";
 import { getQuestionByIdUseCase } from "@/questions/useCases/crudQuestionUseCases";
 import { parseZodErrors } from "@/util/zodErrorHandler";
 import { ZodError } from "zod";
@@ -21,22 +22,39 @@ import {
 // Create
 export const createCommentUseCase = async (
   comment: CreateCommentDto,
+  userId: string,
   connection = db,
   createComment = createCommentService,
+  getQuestionById = getQuestionByIdService,
 ) => {
   try {
-    // Validate the comment
-    const validatedComment = CreateCommentSchema.parse(comment);
-
     // Generate the id using a uuid generator
-    validatedComment.id = generateId();
+    // Validate the comment
+    const validatedComment = CreateCommentSchema.parse({
+      id: generateId(),
+      ...comment,
+    });
+    // Check if a question exist for the given comments question id
+    await getQuestionByIdUseCase(comment.questionId, db, getQuestionById);
     // Set the created at and updated at fields
     validatedComment.createdAt = new Date();
     validatedComment.updatedAt = validatedComment.createdAt;
     // Set the active field to true
     validatedComment.active = true;
     // Create the comment
-    const createdComment = await createComment(validatedComment, connection);
+    const createdComment = await createComment(
+      {
+        id: validatedComment.id,
+        comment: validatedComment.comment,
+        questionId: validatedComment.questionId,
+        isAnswer: validatedComment.isAnswer || false,
+        authorId: userId,
+        createdAt: validatedComment.createdAt,
+        updatedAt: validatedComment.updatedAt,
+        active: true,
+      },
+      connection,
+    );
     // Return the created comment
     if (createdComment.length === 0)
       throw new Error("Failed to create comment");

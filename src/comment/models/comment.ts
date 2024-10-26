@@ -1,8 +1,8 @@
 import { QuestionTable } from "@/questions/models/question";
 import {
   boolean,
+  integer,
   pgTable,
-  serial,
   text,
   timestamp,
   uuid,
@@ -14,10 +14,10 @@ import { z } from "zod";
 export const CommentTable = pgTable("comment", {
   id: uuid("id").primaryKey(),
   comment: text("comment").notNull(),
-  questionId: serial("question_id")
+  questionId: integer("question_id")
     .notNull()
     .references(() => QuestionTable.id),
-  parentCommentId: uuid("parent_comment_id"),
+  //   parentCommentId: uuid("parent_comment_id"),
   isAnswer: boolean("is_answer").notNull().default(false),
   authorId: varchar("author_id", { length: 40 }).notNull(),
   active: boolean("active").notNull().default(true),
@@ -28,5 +28,5 @@ export const CommentTable = pgTable("comment", {
 export const ReadCommentSchema = createSelectSchema(CommentTable);
 export const CreateCommentSchema = createInsertSchema(CommentTable);
 
-export type CreateCommentDto = Omit<z.infer<typeof ReadCommentSchema>, "id">;
-export type ReadCommentDto = z.infer<typeof CreateCommentSchema>;
+export type CreateCommentDto = Omit<z.infer<typeof CreateCommentSchema>, "id">;
+export type ReadCommentDto = z.infer<typeof ReadCommentSchema>;
