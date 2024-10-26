@@ -88,12 +88,13 @@ export const updateCommentUseCase = async (
   comment: ReadCommentDto,
   connection = db,
   updateComment = updateCommentService,
+  getUser = getAuthenticatedUser,
 ) => {
   try {
     // Validate the comment
     const validatedComment = ReadCommentSchema.parse(comment);
     // Get the current user
-    const userId = getAuthenticatedUser();
+    const userId = getUser();
 
     // Check if the user is same as the auther of the comment or the auther of the question
     if (validatedComment.authorId !== userId)
@@ -109,6 +110,24 @@ export const updateCommentUseCase = async (
     if (oldComment.updatedAt.getTime() !== validatedComment.updatedAt.getTime())
       throw new Error("Comment has been updated by someone else");
 
+    // Check if not updatable fields are updated
+    if (oldComment.authorId !== validatedComment.authorId) {
+      throw new Error(
+        "You are not allowed to update the author id of the comment",
+      );
+    }
+    if (oldComment.questionId !== validatedComment.questionId) {
+      throw new Error(
+        "You are not allowed to update the question id of the comment",
+      );
+    }
+    if (
+      oldComment.createdAt.getTime() !== validatedComment.createdAt.getTime()
+    ) {
+      throw new Error(
+        "You are not allowed to update the created at field of the comment",
+      );
+    }
     // Set the updated at field
     validatedComment.updatedAt = new Date();
     // Update the comment
