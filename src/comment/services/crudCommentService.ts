@@ -1,11 +1,7 @@
 import { eq } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
-import {
-  CommentTable,
-  CreateCommentDto,
-  ReadCommentDto,
-} from "../models/comment";
+import { CommentTable, ReadCommentDto } from "../models/comment";
 
 // Create
 export const createCommentService = async (
