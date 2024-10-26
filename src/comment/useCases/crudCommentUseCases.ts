@@ -1,0 +1,151 @@
+import { getAuthenticatedUser } from "@/auth/getAuthenticatedUser";
+import { db } from "@/db/drizzle";
+import { generateId } from "@/lib/generateId";
+import { getQuestionByIdUseCase } from "@/questions/useCases/crudQuestionUseCases";
+import { parseZodErrors } from "@/util/zodErrorHandler";
+import { ZodError } from "zod";
+
+import {
+  CreateCommentDto,
+  CreateCommentSchema,
+  ReadCommentDto,
+  ReadCommentSchema,
+} from "../models/comment";
+import {
+  createCommentService,
+  deleteCommentService,
+  getCommentByIdService,
+  updateCommentService,
+} from "../services/crudCommentService";
+
+// Create
+export const createCommentUseCase = async (
+  comment: CreateCommentDto,
+  connection = db,
+  createComment = createCommentService,
+) => {
+  try {
+    // Validate the comment
+    const validatedComment = CreateCommentSchema.parse(comment);
+
+    // Generate the id using a uuid generator
+    validatedComment.id = generateId();
+    // Set the created at and updated at fields
+    validatedComment.createdAt = new Date();
+    validatedComment.updatedAt = validatedComment.createdAt;
+    // Set the active field to true
+    validatedComment.active = true;
+    // Create the comment
+    const createdComment = await createComment(validatedComment, connection);
+    // Return the created comment
+    if (createdComment.length === 0)
+      throw new Error("Failed to create comment");
+    return createdComment[0];
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw parseZodErrors(error);
+    }
+    throw error;
+  }
+};
+// Get By Id
+export const getCommentByIdUseCase = async (
+  id: ReadCommentDto["id"],
+  connection = db,
+  getCommentById = getCommentByIdService,
+) => {
+  try {
+    const comment = await getCommentById(id, connection);
+    if (comment.length === 0) throw new Error("Comment not found");
+    return comment[0];
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw parseZodErrors(error);
+    }
+    throw error;
+  }
+};
+// Update
+export const updateCommentUseCase = async (
+  comment: ReadCommentDto,
+  connection = db,
+  updateComment = updateCommentService,
+) => {
+  try {
+    // Validate the comment
+    const validatedComment = ReadCommentSchema.parse(comment);
+    // Get the current user
+    const userId = getAuthenticatedUser();
+
+    // Check if the user is same as the auther of the comment or the auther of the question
+    if (validatedComment.authorId !== userId)
+      throw new Error(
+        "You are not allowed to update this comment, Only the author of the comment can update the comment",
+      );
+    // Get the old comment
+    const oldComment = await getCommentByIdUseCase(
+      validatedComment.id,
+      connection,
+    );
+    // Check if the comment has been updated by someone else
+    if (oldComment.updatedAt.getTime() !== validatedComment.updatedAt.getTime())
+      throw new Error("Comment has been updated by someone else");
+
+    // Set the updated at field
+    validatedComment.updatedAt = new Date();
+    // Update the comment
+    const updatedComment = await updateComment(validatedComment, connection);
+    // Return the updated comment
+    if (updatedComment.length === 0)
+      throw new Error("Failed to update comment");
+    return updatedComment[0];
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw parseZodErrors(error);
+    }
+    throw error;
+  }
+};
+
+// Delete
+export const deleteCommentUseCase = async (
+  comment: ReadCommentDto,
+  connection = db,
+  deleteComment = deleteCommentService,
+) => {
+  try {
+    // Validate the comment
+    const validatedComment = ReadCommentSchema.parse(comment);
+    // Get the old comment
+    const oldComment = await getCommentByIdUseCase(
+      validatedComment.id,
+      connection,
+    );
+    // Check if the comment has been updated by someone else
+    if (oldComment.updatedAt.getTime() !== validatedComment.updatedAt.getTime())
+      throw new Error("Comment has been updated by someone else");
+    // Get the current user
+    const userId = getAuthenticatedUser();
+    // Get the question connected to the comment
+    const question = await getQuestionByIdUseCase(
+      validatedComment.questionId,
+      connection,
+    );
+    // Check if the user is same as the auther of the comment or the auther of the question
+    if (validatedComment.authorId !== userId && question.authorId !== userId)
+      throw new Error(
+        "You are not allowed to delete this comment, Only the author of the comment or the author of the question can delete the comment",
+      );
+    // Delete the comment
+    const deletedComment = await deleteComment(validatedComment, connection);
+    // Return the deleted comment
+    if (deletedComment.length === 0)
+      throw new Error("Failed to delete comment");
+    return deletedComment[0];
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      throw parseZodErrors(error);
+    }
+    throw error;
+  }
+};

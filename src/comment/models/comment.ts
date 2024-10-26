@@ -28,5 +28,5 @@ export const CommentTable = pgTable("comment", {
 export const ReadCommentSchema = createSelectSchema(CommentTable);
 export const CreateCommentSchema = createInsertSchema(CommentTable);
 
-export type CreateQuestionDto = z.infer<typeof ReadCommentSchema>;
-export type ReadQuestionDto = z.infer<typeof CreateCommentSchema>;
+export type CreateCommentDto = Omit<z.infer<typeof ReadCommentSchema>, "id">;
+export type ReadCommentDto = z.infer<typeof CreateCommentSchema>;
