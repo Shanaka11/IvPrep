@@ -40,18 +40,7 @@ const QuestionCard = ({ question }: QuestionCardProps) => {
         </Button>
         <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
         {/* Comments should be here */}
-        {showComments && (
-          <>
-            <Suspense fallback={<h1>"Loading"</h1>}>
-              <CommentList questionId={question.id} />
-            </Suspense>
-
-            <SignedIn>
-              <NewComment questionId={question.id} />
-            </SignedIn>
-          </>
-        )}
-        {/* New Comments Only show this if logged in*/}
+        <CommentList questionId={question.id} showComments={showComments} />
       </CardContent>
     </Card>
   );

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { useCache } from "@/query/cache";
 import { Send, SendHorizonal } from "lucide-react";
 import React, { useRef, useTransition } from "react";
 
@@ -11,9 +12,11 @@ import { ReadCommentDto } from "../models/comment";
 
 type NewCommentProps = {
   questionId: ReadCommentDto["questionId"];
+  handleNewCommentAdd: () => void;
 };
 
-const NewComment = ({ questionId }: NewCommentProps) => {
+const NewComment = ({ questionId, handleNewCommentAdd }: NewCommentProps) => {
+  const { invalidateCache } = useCache();
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -30,6 +33,8 @@ const NewComment = ({ questionId }: NewCommentProps) => {
           variant: "success",
           title: "Comment added successfully",
         });
+        invalidateCache(`comments, ${questionId}`);
+        handleNewCommentAdd();
       }
     } catch (error: unknown) {
       // Show error toast
