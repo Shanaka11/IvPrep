@@ -1,15 +1,16 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { getAuthenticatedUser } from "@/auth/getAuthenticatedUser";
+import NewComment from "@/comment/components/NewComment";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { generateQuizAction } from "@/questions/actions/question/generateQuizAction";
 import { ReadQuestionDto } from "@/questions/models/question";
+import { SignedIn } from "@clerk/nextjs";
+import { MessageCircle } from "lucide-react";
 import React from "react";
+
+import QuestionCard from "./QuestionCard";
 
 type QuizProps = {
   topics: {
@@ -27,21 +28,8 @@ const Quiz = async ({ topics }: QuizProps) => {
           <h4>No questions available for the selected topic/s</h4>
         </div>
       ) : (
-        questions.map((question, index) => {
-          return (
-            <Card key={question.id}>
-              <CardHeader>
-                <CardTitle>{question.question}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  className="w-full mt-2"
-                  placeholder="Answer"
-                  rows={3}
-                />
-              </CardContent>
-            </Card>
-          );
+        questions.map((question) => {
+          return <QuestionCard key={question.id} question={question} />;
         })
       )}
     </div>
