@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useCache } from "@/query/cache";
+import { useAuth } from "@clerk/nextjs";
 import { Pencil, Save, Trash2, X } from "lucide-react";
 import React, { useState, useTransition } from "react";
 
@@ -19,6 +20,8 @@ const Comment = ({ comment, refreshCommentsList }: CommentProps) => {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const { invalidateCache } = useCache();
+
+  const { userId } = useAuth();
 
   const handleEditOnClick = () => {
     setEditMode(true);
@@ -55,46 +58,49 @@ const Comment = ({ comment, refreshCommentsList }: CommentProps) => {
   return (
     <div className="p-6 w-full">
       <span>{comment.comment}</span>
-      <div className="flex justify-end gap-2">
-        {editMode ? (
-          <>
-            <Button title="Save" size="icon" variant="ghost">
-              <Save size="16" />
-            </Button>
-            <Button
-              title="Cancel"
-              size="icon"
-              variant="ghost"
-              onClick={handleCancleOnClick}
-            >
-              <X size="16" />
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              title="Edit"
-              size="icon"
-              variant="ghost"
-              onClick={handleEditOnClick}
-              disabled={isPending}
-            >
-              <Pencil size="16" />
-            </Button>
-            <Button
-              title="Delete"
-              size="icon"
-              variant="ghost"
-              onClick={() =>
-                startTransition(() => handleDeleteOnClick(comment))
-              }
-              disabled={isPending}
-            >
-              <Trash2 size="16" />
-            </Button>
-          </>
-        )}
-      </div>
+      {/* show this onlu for the auther of the comments */}
+      {userId === comment.authorId && (
+        <div className="flex justify-end gap-2">
+          {editMode ? (
+            <>
+              <Button title="Save" size="icon" variant="ghost">
+                <Save size="16" />
+              </Button>
+              <Button
+                title="Cancel"
+                size="icon"
+                variant="ghost"
+                onClick={handleCancleOnClick}
+              >
+                <X size="16" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                title="Edit"
+                size="icon"
+                variant="ghost"
+                onClick={handleEditOnClick}
+                disabled={isPending}
+              >
+                <Pencil size="16" />
+              </Button>
+              <Button
+                title="Delete"
+                size="icon"
+                variant="ghost"
+                onClick={() =>
+                  startTransition(() => handleDeleteOnClick(comment))
+                }
+                disabled={isPending}
+              >
+                <Trash2 size="16" />
+              </Button>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
