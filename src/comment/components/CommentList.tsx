@@ -36,11 +36,10 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
   };
 
   useEffect(() => {
-    console.log("showComments", showComments);
     if (showComments) {
-      console.log("run", showComments);
       runQuery(questionId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showComments]);
 
   if (commentLoading) {
@@ -49,7 +48,10 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
         {showComments &&
           comments?.map((comment) => (
             <Fragment key={comment.id}>
-              <Comment comment={comment} />
+              <Comment
+                comment={comment}
+                refreshCommentsList={handleNewCommentAdd}
+              />
               <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
             </Fragment>
           ))}
@@ -90,7 +92,10 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
       {showComments &&
         comments?.map((comment) => (
           <Fragment key={comment.id}>
-            <Comment comment={comment} />
+            <Comment
+              comment={comment}
+              refreshCommentsList={handleNewCommentAdd}
+            />
             <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
           </Fragment>
         ))}

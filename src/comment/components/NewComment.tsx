@@ -20,6 +20,7 @@ const NewComment = ({ questionId, handleNewCommentAdd }: NewCommentProps) => {
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+
   const handleSubmit = async () => {
     try {
       if (commentRef.current !== null) {
