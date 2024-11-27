@@ -51,18 +51,20 @@ const NewComment = ({ questionId, handleNewCommentAdd }: NewCommentProps) => {
   };
 
   return (
-    <div className="w-full mt-2 flex items-end gap-2 flex-col relative">
+    <div className="w-full mt-2 flex items-end gap-2 flex-col">
       <Textarea ref={commentRef} placeholder="Answer" rows={3} />
-      <Button
-        title="Answer"
-        onClick={() => startTransition(handleSubmit)}
-        disabled={isPending}
-        size="icon"
-        variant="ghost"
-        className="absolute bottom-1 right-1 text-card hover:text-card"
-      >
-        <SendHorizonal className="fill-primary stroke-1" />
-      </Button>
+      <div>
+        <Button
+          title="Answer"
+          onClick={() => startTransition(handleSubmit)}
+          disabled={isPending}
+          size="icon"
+          variant="ghost"
+          className="text-card hover:text-card"
+        >
+          <SendHorizonal className="fill-primary stroke-1" />
+        </Button>
+      </div>
     </div>
   );
 };
