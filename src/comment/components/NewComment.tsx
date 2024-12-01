@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useCache } from "@/query/cache";
-import { Send, SendHorizonal } from "lucide-react";
+import { SendHorizonal } from "lucide-react";
 import React, { useRef, useTransition } from "react";
 
 import { createCommentAction } from "../actions/CreateCommentAction";

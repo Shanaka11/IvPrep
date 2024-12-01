@@ -9,6 +9,7 @@ import React, { useState, useTransition } from "react";
 
 import { deleteCommentAction } from "../actions/DeleteCommentAction";
 import { ReadCommentDto } from "../models/comment";
+import EditComment from "./EditComment";
 
 type CommentProps = {
   comment: ReadCommentDto;
@@ -55,27 +56,27 @@ const Comment = ({ comment, refreshCommentsList }: CommentProps) => {
     }
   };
 
+  const handleUpdateCommentSuccess = () => {
+    setEditMode(false);
+    refreshCommentsList();
+  };
+
   return (
     <div className="p-6 w-full">
-      <span>{comment.comment}</span>
-      {/* show this onlu for the auther of the comments */}
+      {editMode ? (
+        <EditComment
+          text={comment.comment}
+          comment={comment}
+          handleCancelOnClick={handleCancleOnClick}
+          handleUpdateCommentSuccess={handleUpdateCommentSuccess}
+        />
+      ) : (
+        <span>{comment.comment}</span>
+      )}
+      {/* show this only for the auther of the comments */}
       {userId === comment.authorId && (
         <div className="flex justify-end gap-2">
-          {editMode ? (
-            <>
-              <Button title="Save" size="icon" variant="ghost">
-                <Save size="16" />
-              </Button>
-              <Button
-                title="Cancel"
-                size="icon"
-                variant="ghost"
-                onClick={handleCancleOnClick}
-              >
-                <X size="16" />
-              </Button>
-            </>
-          ) : (
+          {!editMode && (
             <>
               <Button
                 title="Edit"

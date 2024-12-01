@@ -1,5 +1,5 @@
 import { COMMENT_PAGE_SIZE } from "@/util/consts";
-import { eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 import { CommentTable, ReadCommentDto } from "../models/comment";
@@ -14,7 +14,7 @@ export const getCommentsForQuestionService = async (
     .select()
     .from(CommentTable)
     .where(eq(CommentTable.questionId, questionId))
-    .orderBy(CommentTable.isAnswer);
+    .orderBy(asc(CommentTable.isAnswer), desc(CommentTable.createdAt));
   if (page !== -1) {
     query.limit(COMMENT_PAGE_SIZE).offset((page - 1) * COMMENT_PAGE_SIZE);
   }
