@@ -7,16 +7,19 @@ type useQueryProps<TParams, TResponse> = {
   queryFn: (params?: TParams) => Promise<TResponse>;
   queryKey: string;
   initialParams?: TParams;
+  onlyOnDemand?: boolean;
 };
 
 export const useQuery = <TParams, TResponse>({
   queryFn,
   queryKey,
   initialParams,
+  onlyOnDemand = false,
 }: useQueryProps<TParams, TResponse>) => {
   const [data, setData] = useState<TResponse | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
+  const [runOnlyOnDemand, setRunOnnlyOnDemand] = useState(onlyOnDemand);
 
   const { data: cacheData, setData: setCacheData } = useCache();
   const { toast } = useToast();
@@ -65,9 +68,11 @@ export const useQuery = <TParams, TResponse>({
   );
 
   useEffect(() => {
-    runQuery(initialParams);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!runOnlyOnDemand) {
+      runQuery(initialParams);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+  }, [runOnlyOnDemand]);
 
   return {
     isLoading,

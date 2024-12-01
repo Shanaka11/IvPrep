@@ -145,6 +145,7 @@ export const updateCommentUseCase = async (
 // Delete
 export const deleteCommentUseCase = async (
   comment: ReadCommentDto,
+  userId: string,
   connection = db,
   deleteComment = deleteCommentService,
 ) => {
@@ -159,8 +160,7 @@ export const deleteCommentUseCase = async (
     // Check if the comment has been updated by someone else
     if (oldComment.updatedAt.getTime() !== validatedComment.updatedAt.getTime())
       throw new Error("Comment has been updated by someone else");
-    // Get the current user
-    const userId = getAuthenticatedUser();
+
     // Get the question connected to the comment
     const question = await getQuestionByIdUseCase(
       validatedComment.questionId,
