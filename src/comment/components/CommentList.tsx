@@ -3,12 +3,13 @@
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@/query/useQuery";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import React, { Fragment, useEffect } from "react";
 
 import { GetCommentsForQuestionAction } from "../actions/GetCommentsForQuestionAction";
 import { ReadCommentDto } from "../models/comment";
 import Comment from "./Comment";
+import CommentSkeleton from "./CommentSkeleton";
 import NewComment from "./NewComment";
 
 type CommentListProps = {
@@ -56,13 +57,8 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
             </Fragment>
           ))}
 
-        {showComments && (
-          <div className="flex gap-4 flex-col flex-wrap w-full mt-2 p-4">
-            <Skeleton className="w-full h-4 rounded-lg" />
-            <Skeleton className="w-full h-4 rounded-lg" />
-            <Skeleton className="w-1/2 h-4 rounded-lg" />
-          </div>
-        )}
+        {showComments && comments?.length === 0 && <CommentSkeleton />}
+
         <SignedIn>
           <NewComment
             questionId={questionId}
@@ -83,6 +79,12 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
             handleNewCommentAdd={handleNewCommentAdd}
           />
         </SignedIn>
+        <SignedOut>
+          <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
+          <span className="w-full text-center">
+            You must be signed in provide answers
+          </span>
+        </SignedOut>
       </>
     );
   }
@@ -105,6 +107,11 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
           handleNewCommentAdd={handleNewCommentAdd}
         />
       </SignedIn>
+      <SignedOut>
+        <span className="w-full text-center">
+          You must be signed in provide answers
+        </span>
+      </SignedOut>
     </>
   );
 };

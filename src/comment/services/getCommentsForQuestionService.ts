@@ -14,7 +14,7 @@ export const getCommentsForQuestionService = async (
     .select()
     .from(CommentTable)
     .where(eq(CommentTable.questionId, questionId))
-    .orderBy(asc(CommentTable.isAnswer), desc(CommentTable.createdAt));
+    .orderBy(asc(CommentTable.isAnswer), asc(CommentTable.createdAt));
   if (page !== -1) {
     query.limit(COMMENT_PAGE_SIZE).offset((page - 1) * COMMENT_PAGE_SIZE);
   }
