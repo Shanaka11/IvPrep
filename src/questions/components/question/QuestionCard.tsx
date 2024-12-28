@@ -40,7 +40,11 @@ const QuestionCard = ({ question }: QuestionCardProps) => {
         </Button>
         <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
         {/* Comments should be here */}
-        <CommentList questionId={question.id} showComments={showComments} />
+        <CommentList
+          questionId={question.id}
+          questionAuthorId={question.authorId}
+          showComments={showComments}
+        />
       </CardContent>
     </Card>
   );
