@@ -9,6 +9,7 @@ import { Pencil, Save, Trash2, X } from "lucide-react";
 import React, { useState, useTransition } from "react";
 
 import { deleteCommentAction } from "../actions/DeleteCommentAction";
+import { markCommentAsAnswerAction } from "../actions/markCommentAsAnswerAction";
 import { ReadCommentDto } from "../models/comment";
 import EditComment from "./EditComment";
 
@@ -40,6 +41,29 @@ const Comment = ({ comment, refreshCommentsList }: CommentProps) => {
       toast({
         variant: "success",
         title: "Comment deleted successfully",
+      });
+      invalidateCache(`comments, ${comment.questionId}`);
+      refreshCommentsList();
+    } catch (error: unknown) {
+      // Show error toast
+      if (error instanceof Error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.message,
+        });
+        return;
+      }
+      throw error;
+    }
+  };
+
+  const handleMarkCorrectOnClick = async () => {
+    try {
+      await markCommentAsAnswerAction(comment.id);
+      toast({
+        variant: "success",
+        title: "Comment updated successfully",
       });
       invalidateCache(`comments, ${comment.questionId}`);
       refreshCommentsList();
@@ -104,6 +128,15 @@ const Comment = ({ comment, refreshCommentsList }: CommentProps) => {
               >
                 <Trash2 size="16" />
               </Button>
+              {!comment.isAnswer && (
+                <Button
+                  onClick={() =>
+                    startTransition(() => handleMarkCorrectOnClick())
+                  }
+                >
+                  Mark Correct
+                </Button>
+              )}
             </>
           )}
         </div>
