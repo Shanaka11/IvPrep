@@ -3,6 +3,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@/query/useQuery";
+import { ReadQuestionDto } from "@/questions/models/question";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import React, { Fragment, useEffect } from "react";
 
@@ -14,9 +15,14 @@ import NewComment from "./NewComment";
 
 type CommentListProps = {
   questionId: number;
+  questionAuthorId: ReadQuestionDto["authorId"];
   showComments: boolean;
 };
-const CommentList = ({ questionId, showComments }: CommentListProps) => {
+const CommentList = ({
+  questionId,
+  showComments,
+  questionAuthorId,
+}: CommentListProps) => {
   const {
     isLoading: commentLoading,
     data: comments,
@@ -51,6 +57,7 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
             <Fragment key={comment.id}>
               <Comment
                 comment={comment}
+                questionAutherId={questionAuthorId}
                 refreshCommentsList={handleNewCommentAdd}
               />
               <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
@@ -96,6 +103,7 @@ const CommentList = ({ questionId, showComments }: CommentListProps) => {
           <Fragment key={comment.id}>
             <Comment
               comment={comment}
+              questionAutherId={questionAuthorId}
               refreshCommentsList={handleNewCommentAdd}
             />
             <Separator className="my-2 bg-transparent bg-gradient-to-r from-transparent via-primary" />
