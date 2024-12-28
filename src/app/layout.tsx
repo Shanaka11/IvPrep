@@ -28,7 +28,7 @@ export default function RootLayout({
     <Providers>
       <html lang="en">
         <body
-          className={`${roboto.className} grid grid-rows-[50px_1fr] h-dvh w-screen pd-2`}
+          className={`${roboto.className} grid grid-rows-[50px_1fr] h-dvh pd-2`}
         >
           <ThemeProvider
             attribute="class"

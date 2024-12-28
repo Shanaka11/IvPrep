@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useCache } from "@/query/cache";
+import { timeParser } from "@/util/timeParser";
 import { useAuth } from "@clerk/nextjs";
 import { Pencil, Save, Trash2, X } from "lucide-react";
 import React, { useState, useTransition } from "react";
@@ -71,7 +72,12 @@ const Comment = ({ comment, refreshCommentsList }: CommentProps) => {
           handleUpdateCommentSuccess={handleUpdateCommentSuccess}
         />
       ) : (
-        <span>{comment.comment}</span>
+        <>
+          <span className="text-muted mb-3 block text-sm">
+            {timeParser(comment.createdAt)}
+          </span>
+          <span>{comment.comment}</span>
+        </>
       )}
       {/* show this only for the auther of the comments */}
       {userId === comment.authorId && (
