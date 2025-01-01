@@ -64,7 +64,7 @@ const CommentList = ({
             </Fragment>
           ))}
 
-        {showComments && comments?.length === 0 && <CommentSkeleton />}
+        {showComments && !comments && <CommentSkeleton />}
 
         <SignedIn>
           <NewComment
