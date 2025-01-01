@@ -103,7 +103,7 @@ const Comment = ({
   return (
     <div className="p-6 w-full flex gap-2">
       <div className="flex flex-col gap-2 items-center">
-        {questionAutherId === userId && (
+        {questionAutherId === userId ? (
           <Button
             onClick={() => startTransition(() => handleMarkCorrectOnClick())}
             title={comment.isAnswer ? "Unmark as correct" : "Mark as correct"}
@@ -116,6 +116,8 @@ const Comment = ({
               className={comment.isAnswer ? "stroke-primary" : "opacity-70"}
             />
           </Button>
+        ) : (
+          comment.isAnswer && <Check size="28" className="stroke-primary" />
         )}
         {/* <Button
           title="Upvote"
