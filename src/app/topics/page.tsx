@@ -1,4 +1,3 @@
-import { hasPermission } from "@/auth/hasPermission";
 import TopicTableWrapper from "@/questions/components/topic/TopicTableWrapper";
 import { Suspense } from "react";
 
@@ -12,10 +11,6 @@ const page = ({
   const decodedSearchParams = searchParams.search
     ? decodeURIComponent(searchParams.search as string)
     : null;
-
-  if (!hasPermission()) {
-    <p>You do not have permission to access this page</p>;
-  }
 
   return (
     <Suspense key={Date.now()} fallback={<TopicTableLoading />}>
