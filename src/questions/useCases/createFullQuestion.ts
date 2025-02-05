@@ -1,3 +1,4 @@
+import { hasPermission } from "@/auth/hasPermission";
 import { db } from "@/db/drizzle";
 
 import { CreateQuestionDto, ReadQuestionDto } from "../models/question";
@@ -14,6 +15,8 @@ export const createFullQuestion = async (
   connection = db,
 ) => {
   const createdQuestion = await connection.transaction(async (trx) => {
+    if (!hasPermission())
+      throw new Error("Public users are not allowed to create questions");
     // Create Question
     const createdQuestion = await createQuestionUseCase(question, userId, trx);
     // Attach topics to question

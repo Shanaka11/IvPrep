@@ -1,3 +1,4 @@
+import { hasPermission } from "@/auth/hasPermission";
 import { db } from "@/db/drizzle";
 import { parseZodErrors } from "@/util/zodErrorHandler";
 import { ZodError } from "zod";
@@ -22,6 +23,8 @@ export const createQuestionUseCase = async (
   createQuestion = createQuestionService,
 ) => {
   try {
+    if (!hasPermission())
+      throw new Error("Public users are not allowed to create questions");
     // Validate question with zod
     const validatedQuestion = CreateQuestionSchema.parse(question);
 
@@ -67,6 +70,8 @@ export const updateQuestionUseCase = async (
   updateQuestion = updateQuestionService,
 ) => {
   try {
+    if (!hasPermission())
+      throw new Error("Public users are not allowed to update questions");
     // Validate question with zod
     const validatedQuestion = ReadQuestionSchema.parse(question);
 
@@ -102,6 +107,8 @@ export const deleteQuestionUseCase = async (
   userId: ReadQuestionDto["authorId"],
   connection = db,
 ) => {
+  if (!hasPermission())
+    throw new Error("Public users are not allowed to delete questions");
   const oldQuestion = await getQuestionByIdUseCase(question.id, connection);
   // check updatedAt
   if (oldQuestion.updatedAt.getTime() !== question.updatedAt.getTime())

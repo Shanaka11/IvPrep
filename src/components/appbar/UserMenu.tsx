@@ -1,4 +1,3 @@
-import { hasPermission } from "@/auth/hasPermission";
 import { SignOutButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
@@ -21,16 +20,16 @@ const UserMenu = async () => {
     return;
   }
 
-  if (!hasPermission()) {
-    return (
-      <Avatar>
-        <AvatarImage src={user.imageUrl} alt={user.firstName ?? "avatar"} />
-        <AvatarFallback>
-          {user.firstName?.slice(0, 2).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-    );
-  }
+  // if (!hasPermission()) {
+  //   return (
+  //     <Avatar>
+  //       <AvatarImage src={user.imageUrl} alt={user.firstName ?? "avatar"} />
+  //       <AvatarFallback>
+  //         {user.firstName?.slice(0, 2).toUpperCase()}
+  //       </AvatarFallback>
+  //     </Avatar>
+  //   );
+  // }
 
   return (
     <DropdownMenu>

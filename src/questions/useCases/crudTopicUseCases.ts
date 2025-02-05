@@ -1,3 +1,4 @@
+import { hasPermission } from "@/auth/hasPermission";
 import { db } from "@/db/drizzle";
 
 import {
@@ -22,6 +23,8 @@ export const createTopicUseCase = async (
   createTopic = createTopicService,
 ) => {
   // Later restrict this to only allow admins
+  if (!hasPermission())
+    throw new Error("Public users are not allowed to create topics");
   // Validate topic with zod
 
   const validatedTopic = CreateTopicSchema.parse(topic);
@@ -62,6 +65,8 @@ export const updateTopicUseCase = async (
   connection = db,
   updateTopic = updateTopicService,
 ) => {
+  if (!hasPermission())
+    throw new Error("Public users are not allowed to update questions");
   // Validate topic with zod
   const validatedTopic = ReadTopicSchema.parse(topic);
 
