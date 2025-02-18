@@ -21,7 +21,11 @@ const page = ({
       <div className="flex flex-col gap-2">
         <QuestionTableSearch searchString={searchString} topicIds={topics} />
         {(searchString != null || topics.length > 0) && (
-          <QuestionList searchString={searchString} topics={topics} />
+          <QuestionList
+            searchString={searchString}
+            topics={topics}
+            getAll={true}
+          />
         )}
       </div>
     </>
