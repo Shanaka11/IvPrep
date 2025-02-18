@@ -5,12 +5,18 @@ import QuestionCard from "./QuestionCard";
 type QuestionListProps = {
   searchString: string | null;
   topics: number[];
+  getAll?: boolean;
 };
 
-const QuestionList = async ({ searchString, topics }: QuestionListProps) => {
+const QuestionList = async ({
+  searchString,
+  topics,
+  getAll,
+}: QuestionListProps) => {
   const questions = await getUserQuestionsAction({
     searchString,
     topicIds: topics.length > 0 ? topics : null,
+    getAll,
   });
   return (
     <>

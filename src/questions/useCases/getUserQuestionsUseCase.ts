@@ -4,7 +4,7 @@ import { ReadQuestionDto } from "../models/question";
 import { getAllQuestionsService } from "../services/crudQuestionService";
 
 export const getUserQuestionsUseCase = async (
-  autherId: ReadQuestionDto["authorId"],
+  autherId: ReadQuestionDto["authorId"] | null,
   searchString: string | null,
   topicIds: ReadQuestionDto["id"][] | null,
   connection = db,
